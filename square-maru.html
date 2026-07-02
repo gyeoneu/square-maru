@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>스퀘어 마루 — 리드스마트스퀘어 이웃 광장</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Serif+KR:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F6F3EC;
+  --surface:#FFFDF7;
+  --surface2:#EEE9DC;
+  --ink:#1C1A15;
+  --ink-soft:#6A6255;
+  --ink-mute:#AAA49A;
+  --line:#E0D9CC;
+  --green:#2D6A4F;
+  --green-light:#E6F0EB;
+  --green-deep:#1B4535;
+  --amber:#C8831A;
+  --amber-light:#FDF3E0;
+  --accent:#B84A28;
+  --radius:12px;
+  --radius-sm:7px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--ink);font-family:'Noto Sans KR',sans-serif;line-height:1.6;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;}
+
+/* ══ HEADER ══ */
+.site-header{
+  background:rgba(255,253,247,0.92);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+  position:sticky;top:0;z-index:100;
+}
+.header-inner{
+  max-width:1080px;margin:0 auto;padding:0 20px;
+  height:56px;display:flex;align-items:center;justify-content:space-between;gap:16px;
+}
+.logo{display:flex;align-items:center;gap:10px;cursor:pointer;}
+.logo-mark{
+  width:34px;height:34px;border-radius:8px;
+  background:linear-gradient(135deg,var(--green) 0%,var(--green-deep) 100%);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Noto Serif KR',serif;font-size:15px;font-weight:900;color:#fff;
+  box-shadow:0 2px 6px rgba(45,106,79,0.35);
+}
+.logo-text{font-size:16px;font-weight:900;letter-spacing:-0.02em;}
+.logo-text em{color:var(--green);font-style:normal;}
+
+.header-nav{display:flex;align-items:center;gap:2px;}
+.header-nav a{font-size:14px;font-weight:500;padding:6px 12px;border-radius:var(--radius-sm);color:var(--ink-soft);transition:.15s;}
+.header-nav a:hover,.header-nav a.on{background:var(--green-light);color:var(--green);}
+.header-nav .sep{width:1px;height:16px;background:var(--line);margin:0 4px;}
+
+.btn-join{background:var(--green);color:#fff;font-size:13px;font-weight:700;padding:7px 16px;border-radius:20px;flex-shrink:0;transition:background .15s;}
+.btn-join:hover{background:var(--green-deep);}
+
+.hbg{display:none;flex-direction:column;gap:5px;padding:8px;background:none;}
+.hbg span{display:block;width:22px;height:2px;background:var(--ink);border-radius:2px;transition:.2s;}
+
+@media(max-width:680px){
+  .header-nav{display:none;position:absolute;top:56px;left:0;right:0;background:var(--surface);border-bottom:1px solid var(--line);flex-direction:column;align-items:stretch;padding:10px 14px;gap:2px;}
+  .header-nav.open{display:flex;}
+  .header-nav a{padding:10px 12px;}
+  .header-nav .sep{display:none;}
+  .hbg{display:flex;}
+}
+
+/* ══ HERO ══ */
+.hero{
+  background:var(--green-deep);
+  position:relative;overflow:hidden;
+  padding:60px 20px 50px;
+  min-height:480px;
+  display:flex;align-items:center;
+}
+
+/* 창문 격자 캔버스 */
+#win-canvas{position:absolute;inset:0;width:100%;height:100%;opacity:0.55;}
+
+.hero-inner{
+  max-width:1080px;margin:0 auto;width:100%;
+  display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;
+  position:relative;z-index:2;
+}
+@media(max-width:700px){.hero-inner{grid-template-columns:1fr;}}
+
+.hero-left{}
+.hero-eyebrow{font-size:11px;letter-spacing:0.22em;color:rgba(255,255,255,0.55);margin-bottom:14px;font-weight:600;}
+.hero-title{
+  font-family:'Noto Serif KR',serif;
+  font-size:clamp(26px,4.5vw,42px);font-weight:900;
+  color:#fff;line-height:1.25;margin-bottom:16px;
+}
+.hero-title span{color:var(--amber);display:block;}
+.hero-desc{font-size:15px;color:rgba(255,255,255,0.75);line-height:1.75;margin-bottom:28px;}
+.hero-btns{display:flex;gap:10px;flex-wrap:wrap;}
+.btn-main{background:#fff;color:var(--green-deep);font-size:14px;font-weight:700;padding:11px 22px;border-radius:22px;transition:opacity .15s;}
+.btn-main:hover{opacity:.88;}
+.btn-ghost{background:rgba(255,255,255,0.12);color:#fff;font-size:14px;font-weight:500;padding:11px 22px;border-radius:22px;border:1px solid rgba(255,255,255,0.28);transition:background .15s;}
+.btn-ghost:hover{background:rgba(255,255,255,0.2);}
+
+.hero-stats{display:flex;gap:24px;margin-top:32px;padding-top:24px;border-top:1px solid rgba(255,255,255,0.15);flex-wrap:wrap;}
+.hstat .n{font-size:26px;font-weight:900;color:#fff;font-family:'Noto Serif KR',serif;}
+.hstat .l{font-size:11px;color:rgba(255,255,255,0.55);margin-top:1px;}
+
+/* 오늘의 마루 한 마디 액자 */
+.maru-frame{
+  background:rgba(255,250,235,0.08);
+  border:1px solid rgba(255,220,120,0.3);
+  border-radius:16px;
+  padding:28px 24px;
+  backdrop-filter:blur(6px);
+  position:relative;
+}
+.maru-frame::before{
+  content:"";position:absolute;inset:-1px;border-radius:17px;
+  background:linear-gradient(135deg,rgba(200,131,26,0.4),rgba(255,255,255,0.05),rgba(200,131,26,0.2));
+  pointer-events:none;z-index:-1;
+}
+.frame-label{font-size:11px;letter-spacing:0.18em;color:var(--amber);font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:6px;}
+.frame-label::before,.frame-label::after{content:"";flex:1;height:1px;background:rgba(200,131,26,0.3);}
+.frame-saying{font-family:'Noto Serif KR',serif;font-size:22px;font-weight:700;color:#fff;line-height:1.5;margin-bottom:12px;word-break:keep-all;}
+.frame-hanja{font-size:13px;color:rgba(255,255,255,0.45);margin-bottom:10px;letter-spacing:0.05em;}
+.frame-meaning{font-size:13px;color:rgba(255,255,255,0.7);line-height:1.6;border-top:1px solid rgba(255,255,255,0.1);padding-top:10px;}
+.frame-date{font-size:11px;color:rgba(255,255,255,0.35);margin-top:10px;text-align:right;}
+
+/* ══ LAYOUT ══ */
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px;}
+.sec{padding:40px 0;}
+.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+.sec-head h2{font-size:18px;font-weight:700;}
+.sec-head a{font-size:13px;color:var(--green);font-weight:500;}
+
+/* ══ 유료 광고 배너 ══ */
+.ad-banner{
+  background:linear-gradient(120deg,#1B4535 0%,#2D6A4F 60%,#3D8B68 100%);
+  border-radius:var(--radius);padding:18px 22px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  margin-bottom:28px;position:relative;overflow:hidden;
+}
+.ad-banner::after{content:"AD";position:absolute;top:8px;right:12px;font-size:10px;color:rgba(255,255,255,0.4);letter-spacing:0.1em;}
+.ad-banner .ad-txt h3{font-size:15px;font-weight:700;color:#fff;margin-bottom:3px;}
+.ad-banner .ad-txt p{font-size:13px;color:rgba(255,255,255,0.75);}
+.btn-ad{background:rgba(255,255,255,0.15);color:#fff;font-size:13px;font-weight:700;padding:8px 16px;border-radius:20px;border:1px solid rgba(255,255,255,0.3);flex-shrink:0;}
+
+/* ══ NEW 배너 ══ */
+.new-strip{
+  background:linear-gradient(120deg,var(--amber) 0%,#E09420 100%);
+  border-radius:var(--radius);padding:16px 22px;color:#fff;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  margin-bottom:28px;
+}
+.new-strip h3{font-size:14px;font-weight:700;margin-bottom:2px;}
+.new-strip p{font-size:12px;opacity:.85;}
+.new-strip .day-badge{font-size:30px;font-weight:900;font-family:'Noto Serif KR',serif;opacity:.9;flex-shrink:0;}
+
+/* ══ TABS ══ */
+.tabs{display:flex;gap:4px;background:var(--surface2);padding:4px;border-radius:10px;width:fit-content;margin-bottom:18px;}
+.tab{font-size:13px;font-weight:600;padding:7px 16px;border-radius:7px;background:transparent;color:var(--ink-soft);transition:.15s;}
+.tab.on{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,0.08);}
+
+/* ══ FILTER ══ */
+.filters{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px;}
+.fbtn{font-size:13px;padding:5px 13px;border-radius:18px;background:var(--surface);border:1px solid var(--line);color:var(--ink-soft);font-weight:500;transition:.15s;}
+.fbtn.on{background:var(--green);border-color:var(--green);color:#fff;}
+.fbtn:hover:not(.on){border-color:var(--green);color:var(--green);}
+
+/* ══ CARDS ══ */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;}
+.grid2{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:14px;}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;transition:box-shadow .2s,transform .2s;cursor:pointer;}
+.card:hover{box-shadow:0 6px 20px rgba(0,0,0,0.09);transform:translateY(-2px);}
+.card-ph{width:100%;height:150px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:36px;color:var(--ink-mute);}
+.card-body{padding:13px 15px;}
+.card-metas{display:flex;gap:5px;margin-bottom:6px;flex-wrap:wrap;}
+.badge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:16px;}
+.b-trade{background:var(--green-light);color:var(--green);}
+.b-share{background:#FDECE5;color:var(--accent);}
+.b-new{background:#FEF3CD;color:#8A5C0A;}
+.b-biz{background:#EEF0FB;color:#3D4EAC;}
+.b-ad{background:linear-gradient(90deg,#1B4535,#2D6A4F);color:#fff;}
+.card-title{font-size:14px;font-weight:700;margin-bottom:3px;line-height:1.4;}
+.card-sub{font-size:12px;color:var(--ink-soft);line-height:1.5;}
+.card-foot{padding:9px 15px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;font-size:12px;color:var(--ink-mute);}
+.price{font-size:14px;font-weight:700;color:var(--ink);}
+.price.free{color:var(--green);}
+
+/* ══ BIZ ROW ══ */
+.biz-row{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px;display:flex;gap:13px;align-items:flex-start;transition:box-shadow .2s,transform .2s;cursor:pointer;}
+.biz-row:hover{box-shadow:0 4px 14px rgba(0,0,0,0.08);transform:translateY(-1px);}
+.biz-ico{width:52px;height:52px;border-radius:10px;background:var(--surface2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:22px;}
+.biz-info{flex:1;min-width:0;}
+.biz-name{font-size:14px;font-weight:700;margin-bottom:2px;}
+.biz-fl{font-size:11px;color:var(--ink-mute);margin-bottom:4px;}
+.biz-desc{font-size:12px;color:var(--ink-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.biz-tags{display:flex;gap:4px;margin-top:7px;flex-wrap:wrap;}
+.btag{font-size:11px;background:var(--surface2);color:var(--ink-soft);padding:2px 7px;border-radius:10px;}
+
+/* ══ 모달 ══ */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;align-items:center;justify-content:center;padding:20px;}
+.overlay.open{display:flex;}
+.modal{background:var(--surface);border-radius:16px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;position:relative;}
+.modal-ph{width:100%;height:190px;background:var(--green-light);border-radius:16px 16px 0 0;display:flex;align-items:center;justify-content:center;font-size:52px;}
+.modal-body{padding:22px;}
+.modal-hd{display:flex;gap:13px;margin-bottom:14px;}
+.modal-ico{width:60px;height:60px;border-radius:12px;background:var(--surface2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:26px;border:2px solid var(--line);margin-top:-36px;}
+.modal-nm{font-size:18px;font-weight:900;margin-bottom:3px;}
+.modal-fl{font-size:12px;color:var(--ink-mute);}
+.modal-desc{font-size:14px;color:var(--ink-soft);line-height:1.7;margin-bottom:16px;}
+.modal-chat{background:var(--green-light);border-radius:var(--radius-sm);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.btn-chat{background:var(--green);color:#fff;font-size:13px;font-weight:700;padding:8px 16px;border-radius:18px;}
+.modal-close{position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:50%;background:rgba(0,0,0,0.3);color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10;}
+
+/* ══ 게시판 ══ */
+.posts{display:flex;flex-direction:column;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;}
+.post-row{background:var(--surface);padding:12px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:background .15s;}
+.post-row:hover{background:var(--surface2);}
+.pcat{font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px;white-space:nowrap;flex-shrink:0;}
+.pcat.notice{background:#FEF3CD;color:#8A5C0A;}
+.pcat.general{background:var(--surface2);color:var(--ink-soft);}
+.pcat.food{background:#FDECE5;color:var(--accent);}
+.pcat.help{background:#EEF0FB;color:#3D4EAC;}
+.ptitle{flex:1;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ptitle.bold{font-weight:700;}
+.pmeta{font-size:11px;color:var(--ink-mute);white-space:nowrap;flex-shrink:0;}
+
+/* ══ 폼 ══ */
+.form-box{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:26px;}
+.form-box h3{font-size:16px;font-weight:700;margin-bottom:5px;}
+.form-box .desc{font-size:13px;color:var(--ink-soft);margin-bottom:20px;line-height:1.6;}
+.frow{margin-bottom:14px;}
+.frow label{font-size:13px;font-weight:600;color:var(--ink-soft);display:block;margin-bottom:5px;}
+.frow input,.frow textarea,.frow select{width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:var(--radius-sm);background:var(--bg);font-family:inherit;font-size:14px;color:var(--ink);}
+.frow input:focus,.frow textarea:focus,.frow select:focus{outline:2px solid var(--green);outline-offset:1px;border-color:transparent;}
+.frow textarea{resize:vertical;min-height:72px;}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+@media(max-width:480px){.f2{grid-template-columns:1fr;}}
+.btn-sub{background:var(--green);color:#fff;font-size:15px;font-weight:700;padding:12px;border-radius:22px;width:100%;margin-top:6px;transition:background .15s;}
+.btn-sub:hover{background:var(--green-deep);}
+
+/* ══ 관리자 ══ */
+.admin-box{background:var(--surface);border:2px solid var(--green);border-radius:var(--radius);padding:22px;margin-bottom:22px;}
+.admin-box h3{font-size:15px;font-weight:700;color:var(--green);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.atbl{width:100%;border-collapse:collapse;font-size:13px;}
+.atbl th{text-align:left;padding:7px 10px;border-bottom:2px solid var(--line);color:var(--ink-soft);font-weight:600;}
+.atbl td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:middle;}
+.atbl tr:last-child td{border-bottom:none;}
+.btn-act{background:var(--green);color:#fff;font-size:12px;font-weight:700;padding:5px 12px;border-radius:12px;transition:.15s;}
+.btn-act:hover{background:var(--green-deep);}
+.btn-acted{background:var(--surface2);color:var(--ink-mute);font-size:12px;padding:5px 12px;border-radius:12px;cursor:default;}
+.sdot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:4px;}
+.sdot.pend{background:var(--amber);}
+.sdot.act{background:var(--green);}
+
+/* ══ 약속 ══ */
+.rules{display:flex;flex-direction:column;gap:9px;}
+.rule{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-sm);padding:13px 15px;}
+.rule-ico{font-size:18px;flex-shrink:0;}
+.rule-txt{font-size:13px;line-height:1.6;}
+.rule-txt strong{display:block;font-size:12px;font-weight:700;color:var(--green);margin-bottom:1px;}
+
+/* ══ TOAST ══ */
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 20px;border-radius:28px;font-size:13px;opacity:0;pointer-events:none;transition:.22s ease;z-index:300;white-space:nowrap;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(-5px);}
+
+/* ══ PAGE ══ */
+.page{display:none;}
+.page.on{display:block;}
+
+/* ══ FOOTER ══ */
+footer{background:var(--ink);color:rgba(255,255,255,0.45);padding:28px 20px;margin-top:60px;text-align:center;font-size:13px;line-height:1.8;}
+footer strong{color:rgba(255,255,255,0.85);}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="logo" onclick="go('home')">
+      <div class="logo-mark">마</div>
+      <div class="logo-text">스퀘어 <em>마루</em></div>
+    </div>
+    <nav class="header-nav" id="gnb">
+      <a href="#" onclick="go('home')" id="n-home" class="on">홈</a>
+      <a href="#" onclick="go('trade')" id="n-trade">거래·나눔</a>
+      <a href="#" onclick="go('biz')" id="n-biz">업체 찾기</a>
+      <a href="#" onclick="go('board')" id="n-board">마루 소식</a>
+      <div class="sep"></div>
+      <a href="#" onclick="go('admin')" id="n-admin" style="color:var(--green);font-weight:700;">관리자</a>
+    </nav>
+    <button class="btn-join" onclick="go('register')">이웃 등록 신청</button>
+    <button class="hbg" id="hbg"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<!-- ══ HOME ══ -->
+<div class="page on" id="p-home">
+
+  <!-- HERO -->
+  <div class="hero">
+    <canvas id="win-canvas"></canvas>
+    <div class="hero-inner">
+      <div class="hero-left">
+        <div class="hero-eyebrow">LEAD SMART SQUARE · 리드스마트스퀘어</div>
+        <h1 class="hero-title">같은 건물,<br><span>같은 마루에서</span></h1>
+        <p class="hero-desc">1,300개 이웃 업체가 한 지붕 아래 있어요.<br>거래하고, 나누고, 서로를 알아가세요.</p>
+        <div class="hero-btns">
+          <button class="btn-main" onclick="go('biz')">업체 찾아보기</button>
+          <button class="btn-ghost" onclick="go('register')">이웃 등록 신청</button>
+        </div>
+        <div class="hero-stats">
+          <div class="hstat"><div class="n">1,300+</div><div class="l">입주 업체</div></div>
+          <div class="hstat"><div class="n">24</div><div class="l">신규 이웃</div></div>
+          <div class="hstat"><div class="n">138</div><div class="l">이번 달 거래·나눔</div></div>
+        </div>
+      </div>
+
+      <!-- 오늘의 마루 한 마디 -->
+      <div class="maru-frame">
+        <div class="frame-label" id="fs-label">오늘의 마루 한 마디</div>
+        <div class="frame-saying" id="fs-saying">—</div>
+        <div class="frame-hanja" id="fs-hanja"></div>
+        <div class="frame-meaning" id="fs-meaning"></div>
+        <div class="frame-date" id="fs-date"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+
+    <!-- 유료 광고 배너 -->
+    <div class="sec" style="padding-bottom:0;">
+      <div class="ad-banner">
+        <div class="ad-txt">
+          <h3>📢 리드스마트스퀘어 이웃에게 홍보하세요</h3>
+          <p>입주 업체 1,300곳에 내 가게를 알릴 수 있어요. 첫 달 50% 할인 중.</p>
+        </div>
+        <button class="btn-ad" onclick="toast('광고 문의: 관리사무소 031-000-0000')">광고 문의하기</button>
+      </div>
+    </div>
+
+    <!-- 신규 입주 -->
+    <div class="sec" style="padding-bottom:0;">
+      <div class="new-strip">
+        <div><h3>🎉 이번 달 새로 오신 이웃</h3><p>신규 입주 업체는 15일간 무료 홍보 중이에요. 먼저 인사 나눠보세요!</p></div>
+        <div class="day-badge">15일</div>
+      </div>
+    </div>
+
+    <!-- 신규 업체 -->
+    <div class="sec">
+      <div class="sec-head"><h2>새로 오신 이웃 👋</h2><a href="#" onclick="go('biz')">더 보기</a></div>
+      <div class="grid2">
+        <div class="biz-row" onclick="openModal('삼성시스템에어컨','수리·설치','B동 703호','에어컨 설치·수리 전문 25년 경력. 리드스마트스퀘어 입주 업체 특별 할인 제공.','🌬️','설치','출장','할인')">
+          <div class="biz-ico">🌬️</div>
+          <div class="biz-info">
+            <div class="biz-name">삼성시스템에어컨</div>
+            <div class="biz-fl">B동 703호 · 수리·설치</div>
+            <div class="biz-desc">에어컨 설치·수리 전문 25년 경력</div>
+            <div class="biz-tags"><span class="btag">설치</span><span class="btag">출장</span><span class="badge b-new">NEW 12일</span></div>
+          </div>
+        </div>
+        <div class="biz-row" onclick="openModal('다온그래픽','디자인·인쇄','A동 512호','로고·명함·배너·간판 디자인. 빠른 제작 가능.','🎨','디자인','인쇄','CI')">
+          <div class="biz-ico">🎨</div>
+          <div class="biz-info">
+            <div class="biz-name">다온그래픽</div>
+            <div class="biz-fl">A동 512호 · 디자인·인쇄</div>
+            <div class="biz-desc">로고·명함·배너·간판 디자인 전문</div>
+            <div class="biz-tags"><span class="btag">디자인</span><span class="btag">인쇄</span><span class="badge b-new">NEW 7일</span></div>
+          </div>
+        </div>
+        <div class="biz-row" onclick="openModal('한울노무사사무소','노무·법무','C동 1102호','취업규칙·근로계약서·4대보험 상담. 첫 상담 무료.','⚖️','노무','법무','상담무료')">
+          <div class="biz-ico">⚖️</div>
+          <div class="biz-info">
+            <div class="biz-name">한울노무사사무소</div>
+            <div class="biz-fl">C동 1102호 · 노무·법무</div>
+            <div class="biz-desc">취업규칙·근로계약서·4대보험 상담</div>
+            <div class="biz-tags"><span class="btag">노무</span><span class="btag">상담무료</span><span class="badge b-new">NEW 3일</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 최신 거래나눔 -->
+    <div class="sec">
+      <div class="sec-head"><h2>최신 거래·나눔 🛍️</h2><a href="#" onclick="go('trade')">더 보기</a></div>
+      <div class="grid">
+        <div class="card" onclick="toast('채팅 기능 오픈 예정!')">
+          <div class="card-ph">🖨️</div>
+          <div class="card-body"><div class="card-metas"><span class="badge b-trade">거래</span></div><div class="card-title">레이저 프린터 삼성 M2030</div><div class="card-sub">토너 절반 이상 남음. 직거래 가능.</div></div>
+          <div class="card-foot"><span>A동 205호</span><span class="price">45,000원</span></div>
+        </div>
+        <div class="card" onclick="toast('채팅 기능 오픈 예정!')">
+          <div class="card-ph">🪑</div>
+          <div class="card-body"><div class="card-metas"><span class="badge b-share">나눔</span></div><div class="card-title">사무용 의자 2개 나눔</div><div class="card-sub">이사 정리. 상태 양호.</div></div>
+          <div class="card-foot"><span>B동 904호</span><span class="price free">무료 나눔</span></div>
+        </div>
+        <div class="card" onclick="toast('채팅 기능 오픈 예정!')">
+          <div class="card-ph">☕</div>
+          <div class="card-body"><div class="card-metas"><span class="badge b-share">나눔</span></div><div class="card-title">스타벅스 기프티콘 나눔</div><div class="card-sub">유효기간 임박. 선착순 3분.</div></div>
+          <div class="card-foot"><span>C동 601호</span><span class="price free">무료 나눔</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 마루 소식 -->
+    <div class="sec">
+      <div class="sec-head"><h2>마루 소식 📋</h2><a href="#" onclick="go('board')">더 보기</a></div>
+      <div class="posts">
+        <div class="post-row"><span style="margin-right:4px;">📌</span><span class="pcat notice">공지</span><span class="ptitle bold">7월 주차장 도색 공사 안내 (7/5~7/7)</span><span class="pmeta">관리사무소 · 1일 전</span></div>
+        <div class="post-row"><span class="pcat food">맛집</span><span class="ptitle">3층 구내식당 7월 특선 메뉴 나왔어요</span><span class="pmeta">A동 318호 · 2일 전</span></div>
+        <div class="post-row"><span class="pcat help">도움요청</span><span class="ptitle">A4 용지 한 묶음 빌릴 수 있는 분 계세요?</span><span class="pmeta">B동 712호 · 3시간 전</span></div>
+        <div class="post-row"><span class="pcat general">일반</span><span class="ptitle">건물 앞 새로 생긴 카페 후기 공유해요</span><span class="pmeta">C동 205호 · 5시간 전</span></div>
+      </div>
+    </div>
+
+    <!-- 마루 약속 -->
+    <div class="sec">
+      <div class="sec-head"><h2>우리 마루 약속 🤝</h2></div>
+      <div class="rules">
+        <div class="rule"><div class="rule-ico">👋</div><div class="rule-txt"><strong>서로를 존중해요</strong>같은 건물 이웃이에요. 배려를 잊지 말아요.</div></div>
+        <div class="rule"><div class="rule-ico">✅</div><div class="rule-txt"><strong>정확한 정보를 올려요</strong>허위 업체 정보나 과장된 거래 글은 삼가주세요.</div></div>
+        <div class="rule"><div class="rule-ico">⏰</div><div class="rule-txt"><strong>완료 후 글을 내려요</strong>거래가 끝나면 바로 정리해주세요. 30일 후 자동 삭제돼요.</div></div>
+        <div class="rule"><div class="rule-ico">📞</div><div class="rule-txt"><strong>더 궁금한 건 관리사무소로</strong>☎ 031-000-0000</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ TRADE ══ -->
+<div class="page" id="p-trade">
+  <div class="wrap sec">
+    <h2 style="font-size:20px;font-weight:900;margin-bottom:18px;">거래 · 나눔</h2>
+    <div class="tabs">
+      <button class="tab on" onclick="setTab(this)">전체</button>
+      <button class="tab" onclick="setTab(this)">거래</button>
+      <button class="tab" onclick="setTab(this)">나눔</button>
+    </div>
+    <div class="filters">
+      <button class="fbtn on">전체</button>
+      <button class="fbtn" onclick="filt(this)">사무용품</button>
+      <button class="fbtn" onclick="filt(this)">가구·인테리어</button>
+      <button class="fbtn" onclick="filt(this)">전자기기</button>
+      <button class="fbtn" onclick="filt(this)">식품·음료</button>
+      <button class="fbtn" onclick="filt(this)">기타</button>
+    </div>
+    <div class="grid">
+      <div class="card" onclick="toast('채팅 기능 오픈 예정!')"><div class="card-ph">🖨️</div><div class="card-body"><div class="card-metas"><span class="badge b-trade">거래</span></div><div class="card-title">레이저 프린터 삼성 M2030</div><div class="card-sub">토너 절반 이상 남음.</div></div><div class="card-foot"><span>A동 205호 · 1일 전</span><span class="price">45,000원</span></div></div>
+      <div class="card" onclick="toast('채팅 기능 오픈 예정!')"><div class="card-ph">🪑</div><div class="card-body"><div class="card-metas"><span class="badge b-share">나눔</span></div><div class="card-title">사무용 의자 2개 나눔</div><div class="card-sub">이사 정리. 상태 양호.</div></div><div class="card-foot"><span>B동 904호 · 2일 전</span><span class="price free">무료 나눔</span></div></div>
+      <div class="card" onclick="toast('채팅 기능 오픈 예정!')"><div class="card-ph">💻</div><div class="card-body"><div class="card-metas"><span class="badge b-trade">거래</span></div><div class="card-title">LG 모니터 27인치 QHD</div><div class="card-sub">사용감 거의 없음.</div></div><div class="card-foot"><span>A동 1008호 · 4일 전</span><span class="price">180,000원</span></div></div>
+      <div class="card" onclick="toast('채팅 기능 오픈 예정!')"><div class="card-ph">☕</div><div class="card-body"><div class="card-metas"><span class="badge b-share">나눔</span></div><div class="card-title">스타벅스 기프티콘 나눔</div><div class="card-sub">유효기간 임박. 선착순.</div></div><div class="card-foot"><span>C동 601호 · 3시간 전</span><span class="price free">무료 나눔</span></div></div>
+      <div class="card" onclick="toast('채팅 기능 오픈 예정!')"><div class="card-ph">📦</div><div class="card-body"><div class="card-metas"><span class="badge b-share">나눔</span></div><div class="card-title">A4 복사지 2박스 나눔</div><div class="card-sub">창고 정리. 미개봉 포함.</div></div><div class="card-foot"><span>B동 302호 · 6일 전</span><span class="price free">무료 나눔</span></div></div>
+      <div class="card" onclick="toast('채팅 기능 오픈 예정!')"><div class="card-ph">🧊</div><div class="card-body"><div class="card-metas"><span class="badge b-trade">거래</span></div><div class="card-title">미니 냉장고 판매</div><div class="card-sub">사무실 이전으로 처분. 깨끗함.</div></div><div class="card-foot"><span>C동 811호 · 1주 전</span><span class="price">35,000원</span></div></div>
+    </div>
+    <div style="text-align:center;margin-top:22px;"><button class="btn-sub" style="width:auto;padding:12px 32px;" onclick="toast('이웃 등록 후 글 올리기 가능!')">+ 거래·나눔 글 올리기</button></div>
+  </div>
+</div>
+
+<!-- ══ BIZ ══ -->
+<div class="page" id="p-biz">
+  <div class="wrap sec">
+    <h2 style="font-size:20px;font-weight:900;margin-bottom:6px;">업체 찾기</h2>
+    <p style="font-size:13px;color:var(--ink-soft);margin-bottom:18px;">리드스마트스퀘어 입주 업체를 업종·층수로 찾아보세요. 누구나 검색 가능해요.</p>
+    <div class="filters">
+      <button class="fbtn on">전체</button>
+      <button class="fbtn" onclick="filt(this)">IT·개발</button>
+      <button class="fbtn" onclick="filt(this)">디자인</button>
+      <button class="fbtn" onclick="filt(this)">수리·설치</button>
+      <button class="fbtn" onclick="filt(this)">노무·법무</button>
+      <button class="fbtn" onclick="filt(this)">세무·회계</button>
+      <button class="fbtn" onclick="filt(this)">물류·배송</button>
+    </div>
+    <div class="grid2">
+      <div class="biz-row" onclick="openModal('삼성시스템에어컨','수리·설치','B동 703호','에어컨 설치·수리 전문 25년 경력. 리드스마트스퀘어 입주 업체 특별 할인.','🌬️','설치','출장','할인')"><div class="biz-ico">🌬️</div><div class="biz-info"><div class="biz-name">삼성시스템에어컨</div><div class="biz-fl">B동 703호 · 수리·설치</div><div class="biz-desc">에어컨 설치·수리 전문 25년 경력</div><div class="biz-tags"><span class="btag">설치</span><span class="btag">출장</span><span class="badge b-new">NEW</span></div></div></div>
+      <div class="biz-row" onclick="openModal('다온그래픽','디자인·인쇄','A동 512호','로고·명함·배너·간판 디자인. 당일 출력 가능.','🎨','디자인','인쇄','CI')"><div class="biz-ico">🎨</div><div class="biz-info"><div class="biz-name">다온그래픽</div><div class="biz-fl">A동 512호· 디자인·인쇄</div><div class="biz-desc">로고·명함·배너·간판 디자인 전문</div><div class="biz-tags"><span class="btag">디자인</span><span class="btag">인쇄</span></div></div></div>
+      <div class="biz-row" onclick="openModal('한울노무사사무소','노무·법무','C동 1102호','취업규칙·근로계약서·4대보험. 첫 상담 무료.','⚖️','노무','법무','무료상담')"><div class="biz-ico">⚖️</div><div class="biz-info"><div class="biz-name">한울노무사사무소</div><div class="biz-fl">C동 1102호 · 노무·법무</div><div class="biz-desc">취업규칙·근로계약서·4대보험 상담</div><div class="biz-tags"><span class="btag">노무</span><span class="btag">무료상담</span></div></div></div>
+      <div class="biz-row" onclick="openModal('케이로지텍','물류·배송','A동 B1-04호','소량 물류 보관·배송 대행. 월 단위 계약 가능.','📦','물류','배송','보관')"><div class="biz-ico">📦</div><div class="biz-info"><div class="biz-name">케이로지텍</div><div class="biz-fl">A동 B1-04호 · 물류·배송</div><div class="biz-desc">소량 물류 보관·배송 대행 서비스</div><div class="biz-tags"><span class="btag">물류</span><span class="btag">배송</span></div></div></div>
+      <div class="biz-row" onclick="openModal('스마트웹코딩','IT·개발','B동 908호','홈페이지·쇼핑몰 제작 및 유지보수. 소상공인 특화.','💻','IT','개발','홈페이지')"><div class="biz-ico">💻</div><div class="biz-info"><div class="biz-name">스마트웹코딩</div><div class="biz-fl">B동 908호 · IT·개발</div><div class="biz-desc">홈페이지·쇼핑몰 제작 및 유지보수</div><div class="biz-tags"><span class="btag">IT</span><span class="btag">홈페이지</span></div></div></div>
+      <div class="biz-row" onclick="openModal('리더스회계사무소','세무·회계','C동 405호','법인세·부가세·종합소득세 신고. 세무진단 무료.','📊','세무','회계','절세')"><div class="biz-ico">📊</div><div class="biz-info"><div class="biz-name">리더스회계사무소</div><div class="biz-fl">C동 405호 · 세무·회계</div><div class="biz-desc">법인세·부가세·종합소득세 신고</div><div class="biz-tags"><span class="btag">세무</span><span class="btag">무료진단</span></div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ BOARD ══ -->
+<div class="page" id="p-board">
+  <div class="wrap sec">
+    <h2 style="font-size:20px;font-weight:900;margin-bottom:18px;">마루 소식</h2>
+    <div class="filters">
+      <button class="fbtn on">전체</button>
+      <button class="fbtn" onclick="filt(this)">공지</button>
+      <button class="fbtn" onclick="filt(this)">맛집</button>
+      <button class="fbtn" onclick="filt(this)">도움요청</button>
+      <button class="fbtn" onclick="filt(this)">일반</button>
+    </div>
+    <div class="posts">
+      <div class="post-row"><span style="margin-right:4px;">📌</span><span class="pcat notice">공지</span><span class="ptitle bold">7월 주차장 도색 공사 안내 (7/5~7/7 지하 1층)</span><span class="pmeta">관리사무소 · 1일 전</span></div>
+      <div class="post-row"><span style="margin-right:4px;">📌</span><span class="pcat notice">공지</span><span class="ptitle bold">6월 관리비 납부 안내</span><span class="pmeta">관리사무소 · 5일 전</span></div>
+      <div class="post-row"><span class="pcat food">맛집</span><span class="ptitle">3층 구내식당 7월 특선 메뉴 나왔어요</span><span class="pmeta">A동 318호 · 2일 전</span></div>
+      <div class="post-row"><span class="pcat help">도움요청</span><span class="ptitle">A4 용지 한 묶음 빌릴 수 있는 분 계세요?</span><span class="pmeta">B동 712호 · 3시간 전</span></div>
+      <div class="post-row"><span class="pcat general">일반</span><span class="ptitle">건물 앞 새로 생긴 카페 후기</span><span class="pmeta">C동 205호 · 5시간 전</span></div>
+      <div class="post-row"><span class="pcat help">도움요청</span><span class="ptitle">복합기 토너 어디서 빠르게 구매하셨어요?</span><span class="pmeta">A동 1104호 · 1일 전</span></div>
+      <div class="post-row"><span class="pcat general">일반</span><span class="ptitle">오늘 로비 화분 정말 예쁘게 바뀌었네요 👍</span><span class="pmeta">B동 601호 · 2일 전</span></div>
+    </div>
+    <div style="text-align:center;margin-top:22px;"><button class="btn-sub" style="width:auto;padding:12px 32px;" onclick="toast('이웃 등록 후 글 올리기 가능!')">+ 소식 올리기</button></div>
+  </div>
+</div>
+
+<!-- ══ REGISTER ══ -->
+<div class="page" id="p-register">
+  <div class="wrap sec" style="max-width:560px;">
+    <h2 style="font-size:20px;font-weight:900;margin-bottom:6px;">이웃 등록 신청</h2>
+    <p style="font-size:13px;color:var(--ink-soft);margin-bottom:24px;">관리사무소에서 입주 확인 후 활성화해드려요. 승인 후 공개 버튼은 사장님이 직접 눌러요.</p>
+    <div class="form-box">
+      <h3>업체 정보</h3>
+      <p class="desc">등록 신청 내용은 관리사무소 확인 후 활성화돼요. 내용에 대한 책임은 직접 공개 버튼을 누르는 순간 업체에 있어요.</p>
+      <div class="frow"><label>업체명 *</label><input type="text" placeholder="등록된 업체명"></div>
+      <div class="f2">
+        <div class="frow"><label>동</label><select><option>A동</option><option>B동</option><option>C동</option></select></div>
+        <div class="frow"><label>호수 *</label><input type="text" placeholder="예) 703호"></div>
+      </div>
+      <div class="frow"><label>업종 *</label><select><option>선택</option><option>IT·개발</option><option>디자인·인쇄</option><option>수리·설치</option><option>노무·법무</option><option>세무·회계</option><option>물류·배송</option><option>제조·생산</option><option>기타</option></select></div>
+      <div class="frow"><label>담당자 이메일 *</label><input type="email" placeholder="신청 근거용으로 보관돼요"></div>
+      <div class="frow"><label>연락처</label><input type="text" placeholder="이웃들이 연락할 번호"></div>
+      <div class="frow"><label>한 줄 소개</label><textarea placeholder="어떤 일을 하는 업체인지 짧게 (50자 권장)"></textarea></div>
+      <button class="btn-sub" onclick="toast('신청 접수! 관리사무소 확인 후 활성화돼요.');setTimeout(()=>go('home'),1500);">신청하기</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ADMIN ══ -->
+<div class="page" id="p-admin">
+  <div class="wrap sec">
+    <h2 style="font-size:20px;font-weight:900;margin-bottom:6px;">관리자 — 스퀘어 마루</h2>
+    <p style="font-size:13px;color:var(--ink-soft);margin-bottom:22px;">신청 목록을 확인하고 활성화 버튼을 눌러주세요. 이메일 없이 버튼 하나로 완료돼요.</p>
+    <div class="admin-box">
+      <h3>🔔 신규 등록 신청 <span style="background:#FEF3CD;color:#8A5C0A;font-size:11px;padding:2px 8px;border-radius:10px;margin-left:6px;">3건 대기</span></h3>
+      <div style="overflow-x:auto;">
+        <table class="atbl">
+          <thead><tr><th>업체명</th><th>동·호수</th><th>업종</th><th>이메일</th><th>신청일</th><th></th></tr></thead>
+          <tbody>
+            <tr><td><strong>미래IT솔루션</strong></td><td>A동 215호</td><td>IT·개발</td><td>info@miraeit.co.kr</td><td>2026.07.01</td><td><button class="btn-act" onclick="doActivate(this,'미래IT솔루션')">활성화</button></td></tr>
+            <tr><td><strong>한빛세무회계</strong></td><td>C동 308호</td><td>세무·회계</td><td>hanbit@tax.kr</td><td>2026.06.30</td><td><button class="btn-act" onclick="doActivate(this,'한빛세무회계')">활성화</button></td></tr>
+            <tr><td><strong>그린푸드</strong></td><td>B동 102호</td><td>식품·음료</td><td>green@food.co.kr</td><td>2026.06.29</td><td><button class="btn-act" onclick="doActivate(this,'그린푸드')">활성화</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="admin-box" style="border-color:var(--line);">
+      <h3 style="color:var(--ink);">✅ 활성화된 업체</h3>
+      <div style="overflow-x:auto;">
+        <table class="atbl">
+          <thead><tr><th>업체명</th><th>동·호수</th><th>업종</th><th>등록일</th><th>상태</th></tr></thead>
+          <tbody>
+            <tr><td><strong>삼성시스템에어컨</strong></td><td>B동 703호</td><td>수리·설치</td><td>2026.06.19</td><td><span class="sdot act"></span>활성</td></tr>
+            <tr><td><strong>다온그래픽</strong></td><td>A동 512호</td><td>디자인·인쇄</td><td>2026.06.24</td><td><span class="sdot act"></span>활성</td></tr>
+            <tr><td><strong>한울노무사사무소</strong></td><td>C동 1102호</td><td>노무·법무</td><td>2026.06.28</td><td><span class="sdot act"></span>활성</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 업체 모달 -->
+<div class="overlay" id="biz-overlay" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-close" onclick="document.getElementById('biz-overlay').classList.remove('open')">✕</div>
+    <div class="modal-ph" id="m-ph">🏢</div>
+    <div class="modal-body">
+      <div class="modal-hd">
+        <div class="modal-ico" id="m-ico">🏢</div>
+        <div><div class="modal-nm" id="m-nm">업체명</div><div class="modal-fl" id="m-fl">위치</div></div>
+      </div>
+      <div class="modal-desc" id="m-desc"></div>
+      <div class="modal-chat"><span style="font-size:13px;color:var(--ink-soft);">채팅으로 바로 문의하세요</span><button class="btn-chat" onclick="toast('채팅 기능 오픈 예정!')">💬 채팅하기</button></div>
+      <div><h4 style="font-size:13px;font-weight:700;color:var(--ink-soft);margin-bottom:8px;">거래·나눔</h4><p style="font-size:13px;color:var(--ink-mute);">아직 올린 거래·나눔 글이 없어요.</p></div>
+      <div class="biz-tags" id="m-tags" style="margin-top:12px;"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast-el"></div>
+
+<footer>
+  <strong>스퀘어 마루</strong> — 리드스마트스퀘어 이웃 광장<br>
+  관리사무소 ☎ 031-000-0000 · 검색은 누구나 · 거래·소통은 이웃 등록 후
+</footer>
+
+<script>
+/* ══ 오늘의 마루 한 마디 데이터 (날짜 기반 순환) ══
+   나중에 이 배열에 항목을 추가하면 자동으로 순환됩니다.
+   형식: { saying: "표현", hanja: "한자(선택)", meaning: "뜻 설명" }
+*/
+const SAYINGS = [
+  {saying:"一石二鳥",hanja:"일석이조",meaning:"돌 하나로 새 두 마리를 잡는다. 한 가지 일로 두 가지 이득을 얻음."},
+  {saying:"水滴穿石",hanja:"수적천석",meaning:"물방울이 바위를 뚫는다. 작은 노력도 꾸준히 쌓이면 큰 성과를 이룬다."},
+  {saying:"千里之行 始於足下",hanja:"천리지행 시어족하",meaning:"천 리 길도 한 걸음부터. 무슨 일이든 첫 발을 내딛는 것이 중요하다."},
+  {saying:"磨斧作針",hanja:"마부작침",meaning:"도끼를 갈아 바늘을 만든다. 끊임없는 노력과 인내로 무엇이든 이룰 수 있다."},
+  {saying:"同舟共濟",hanja:"동주공제",meaning:"같은 배를 타고 함께 건넌다. 어려움을 함께 헤쳐 나가는 협력의 정신."},
+  {saying:"見賢思齊",hanja:"견현사제",meaning:"어진 이를 보면 같아지기를 생각하라. 훌륭한 사람을 보고 배우려는 자세."},
+  {saying:"吾日三省",hanja:"오일삼성",meaning:"나는 매일 세 가지를 반성한다. 충실함, 신뢰, 배움을 날마다 돌아보는 습관."},
+  {saying:"知行合一",hanja:"지행합일",meaning:"앎과 행동은 하나다. 알고 있다면 반드시 실천으로 이어져야 한다."},
+  {saying:"青出於藍",hanja:"청출어람",meaning:"쪽빛은 쪽보다 더 푸르다. 제자가 스승보다 뛰어남을 이르는 말."},
+  {saying:"良藥苦口",hanja:"양약고구",meaning:"좋은 약은 입에 쓰다. 진심 어린 충고는 듣기 불편하지만 유익하다."},
+  {saying:"積小成大",hanja:"적소성대",meaning:"작은 것이 쌓여 큰 것을 이룬다. 사소한 노력도 무시하지 말 것."},
+  {saying:"以心傳心",hanja:"이심전심",meaning:"마음에서 마음으로 전한다. 말없이도 서로의 뜻이 통하는 깊은 교감."},
+  {saying:"三人行 必有我師",hanja:"삼인행 필유아사",meaning:"세 사람이 길을 가면 반드시 내 스승이 있다. 누구에게서든 배울 점이 있다."},
+  {saying:"轉禍爲福",hanja:"전화위복",meaning:"재앙이 바뀌어 복이 된다. 어려운 상황도 긍정적으로 바꿀 수 있다."},
+  {saying:"遠水不救近火",hanja:"원수불구근화",meaning:"먼 물은 가까운 불을 끄지 못한다. 이웃과의 협력이 얼마나 소중한지."},
+  {saying:"不恥下問",hanja:"불치하문",meaning:"아랫사람에게 묻는 것을 부끄러워하지 않는다. 배움에 체면을 버려라."},
+  {saying:"過猶不及",hanja:"과유불급",meaning:"지나침은 부족함만 못하다. 모든 일에 적절한 균형이 필요하다."},
+  {saying:"溫故知新",hanja:"온고지신",meaning:"옛것을 익혀 새것을 안다. 과거의 경험에서 새로운 통찰을 얻는다."},
+  {saying:"以德報怨",hanja:"이덕보원",meaning:"원한을 덕으로 갚는다. 미움을 용서와 친절로 대응하는 넓은 마음."},
+  {saying:"愚公移山",hanja:"우공이산",meaning:"우공이 산을 옮긴다. 어리석어 보여도 끝까지 노력하면 반드시 이룬다."},
+  {saying:"好事多磨",hanja:"호사다마",meaning:"좋은 일에는 어려움이 많다. 값진 것일수록 쉽게 얻어지지 않는다."},
+  {saying:"人無遠慮 必有近憂",hanja:"인무원려 필유근우",meaning:"멀리 내다보지 않으면 반드시 가까운 근심이 생긴다. 미래를 준비하는 자세."},
+  {saying:"博學篤志",hanja:"박학독지",meaning:"넓게 배우고 뜻을 독실히 한다. 꾸준한 학습과 확고한 목표 의식."},
+  {saying:"和而不同",hanja:"화이부동",meaning:"화합하되 같아지지는 않는다. 서로 다름을 인정하면서도 조화를 이룬다."},
+  {saying:"信言不美 美言不信",hanja:"신언불미 미언불신",meaning:"진실한 말은 아름답지 않고, 아름다운 말은 진실하지 않다. 진심을 담은 말의 가치."},
+  {saying:"登高自卑",hanja:"등고자비",meaning:"높은 곳에 오르려면 낮은 곳에서 시작해야 한다. 기초의 중요성."},
+  {saying:"勤能補拙",hanja:"근능보졸",meaning:"부지런함은 부족함을 보완한다. 타고난 재능이 없어도 노력으로 극복한다."},
+  {saying:"見利思義",hanja:"견리사의",meaning:"이익을 보면 의로움을 생각하라. 욕심보다 원칙을 먼저 생각하는 자세."},
+  {saying:"大智若愚",hanja:"대지약우",meaning:"큰 지혜는 어리석어 보인다. 진정한 현명함은 겉으로 드러내지 않는 법."},
+  {saying:"知足者富",hanja:"지족자부",meaning:"만족할 줄 아는 자가 부유하다. 욕심을 내려놓을 때 진정한 풍요가 온다."},
+  {saying:"言必信 行必果",hanja:"언필신 행필과",meaning:"말은 반드시 믿음이 있어야 하고 행동은 반드시 결실이 있어야 한다."},
+  {saying:"守株待兔",hanja:"수주대토",meaning:"그루터기를 지키며 토끼를 기다린다. 변하지 않고 요행만 바라면 안 된다."},
+  {saying:"與朋友交 言而有信",hanja:"여붕우교 언이유신",meaning:"친구와 사귀되 말에 믿음이 있어야 한다. 신뢰가 관계의 기본이다."},
+  {saying:"不入虎穴 不得虎子",hanja:"불입호혈 부득호자",meaning:"호랑이 굴에 들어가지 않으면 호랑이 새끼를 잡을 수 없다. 도전 없이 성과 없다."},
+  {saying:"敬天愛人",hanja:"경천애인",meaning:"하늘을 공경하고 사람을 사랑하라. 자연의 이치를 따르고 이웃을 소중히 여기는 삶."},
+  {saying:"學而時習之",hanja:"학이시습지",meaning:"배우고 때로 익히면 또한 기쁘지 않겠는가. 꾸준한 배움의 기쁨."},
+  {saying:"剛柔相濟",hanja:"강유상제",meaning:"강함과 부드러움이 서로를 도와준다. 두 가지 덕목의 조화가 완성을 만든다."},
+  {saying:"天時不如地利 地利不如人和",hanja:"천시불여지리 지리불여인화",meaning:"하늘의 때도, 땅의 이점도 사람의 화합만 못하다. 결국 사람이 가장 중요하다."},
+  {saying:"以小見大",hanja:"이소견대",meaning:"작은 것에서 큰 것을 본다. 사소한 일에서도 큰 진리가 담겨 있다."},
+  {saying:"日就月將",hanja:"일취월장",meaning:"날마다 나아지고 달마다 성장한다. 꾸준한 발전의 기쁨을 느껴보자."},
+  {saying:"仁者見仁 智者見智",hanja:"인자견인 지자견지",meaning:"인자는 仁을 보고 지자는 智를 본다. 같은 것도 보는 사람에 따라 다르게 보인다."},
+  {saying:"一日之計在於晨",hanja:"일일지계재어신",meaning:"하루의 계획은 아침에 있다. 하루를 잘 시작하는 것이 하루를 잘 마무리하는 비결."},
+  {saying:"明鏡止水",hanja:"명경지수",meaning:"맑은 거울과 고요한 물. 욕심이 없는 맑고 고요한 마음의 경지."},
+  {saying:"路遙知馬力",hanja:"노요지마력",meaning:"길이 멀어야 말의 힘을 안다. 어려운 상황에서 진정한 능력이 드러난다."},
+  {saying:"衆志成城",hanja:"중지성성",meaning:"여럿의 뜻이 모이면 성을 이룬다. 함께하는 힘은 무엇이든 가능하게 한다."},
+  {saying:"居安思危",hanja:"거안사위",meaning:"편안할 때 위기를 생각하라. 평화로울 때 어려움을 대비하는 지혜."},
+  {saying:"禍兮福之所倚",hanja:"화혜복지소의",meaning:"재앙이 있는 곳에 복이 기댄다. 위기 속에 기회가 있음을 잊지 말자."},
+  {saying:"見微知著",hanja:"견미지저",meaning:"작은 것을 보고 큰 것을 안다. 사소한 변화에서 큰 흐름을 읽어내는 혜안."},
+  {saying:"克己復禮",hanja:"극기복례",meaning:"자신을 이기고 예의를 회복하라. 절제와 배려가 공동체를 건강하게 한다."},
+  {saying:"人之生也柔弱",hanja:"인지생야유약",meaning:"사람은 살아있을 때 부드럽고 약하다. 부드러움이 곧 생명력임을 기억하자."},
+];
+
+/* ══════════════════════════════════════
+   동적 시스템 — 시간대 / 계절 / 요일 / 특별일
+   ══════════════════════════════════════ */
+
+/* ── 특별한 날 정의 (월/일 기준) ── */
+const SPECIAL_DAYS = [
+  { month:1,  day:1,  emoji:'🎆', label:'새해 첫날', msg:'새해 복 많이 받으세요! 스퀘어 마루 이웃 여러분 모두 건강하고 행복한 한 해 되세요.' },
+  { month:2,  day:14, emoji:'🌹', label:'밸런타인데이', msg:'가까운 이웃에게 따뜻한 마음을 전해보세요.' },
+  { month:3,  day:1,  emoji:'🇰🇷', label:'삼일절', msg:'선열들의 숭고한 뜻을 기억하는 날입니다. 오늘도 함께해서 고맙습니다.' },
+  { month:5,  day:5,  emoji:'🎏', label:'어린이날', msg:'우리 모두 마음속에 어린이를 품고 사는 날! 즐거운 하루 되세요.' },
+  { month:5,  day:8,  emoji:'🌷', label:'어버이날', msg:'부모님께 감사의 말씀 전하는 하루가 되길 바랍니다.' },
+  { month:6,  day:6,  emoji:'🕊️', label:'현충일', msg:'나라를 위해 희생하신 분들을 기억합니다.' },
+  { month:8,  day:15, emoji:'🇰🇷', label:'광복절', msg:'대한민국 광복 81주년을 맞아 자유와 평화의 소중함을 되새깁니다.' },
+  { month:10, day:3,  emoji:'🌟', label:'개천절', msg:'우리 민족의 시작을 기념하는 날입니다. 좋은 하루 보내세요.' },
+  { month:10, day:9,  emoji:'📖', label:'한글날', msg:'세계에서 가장 과학적인 문자, 한글을 만드신 세종대왕께 감사를.' },
+  { month:12, day:25, emoji:'🎄', label:'크리스마스', msg:'즐거운 크리스마스! 스퀘어 마루 이웃 여러분 따뜻한 연말 보내세요.' },
+  { month:12, day:31, emoji:'🥂', label:'한 해의 마지막 날', msg:'올 한 해도 스퀘어 마루 이웃 여러분과 함께해서 행복했습니다. 내년에도 잘 부탁드려요!' },
+];
+
+/* ── 시간대 정의 ── */
+function getTimeSlot(h){
+  if(h >= 5  && h < 9)  return 'dawn';    // 새벽~출근
+  if(h >= 9  && h < 12) return 'morning'; // 오전
+  if(h >= 12 && h < 14) return 'noon';    // 점심
+  if(h >= 14 && h < 18) return 'afternoon';// 오후
+  if(h >= 18 && h < 21) return 'evening'; // 퇴근녘
+  return 'night';                           // 밤
+}
+
+/* ── 시간대별 라벨 ── */
+const TIME_LABELS = {
+  dawn:      '🌅 새벽 — 오늘 하루도 화이팅이에요',
+  morning:   '☀️ 좋은 아침이에요',
+  noon:      '🍱 점심시간이에요',
+  afternoon: '☕ 오후도 힘내세요',
+  evening:   '🌇 오늘 하루도 수고하셨어요',
+  night:     '🌙 편안한 밤 되세요',
+};
+
+/* ── 계절 ── */
+function getSeason(m){
+  if(m>=3&&m<=5)  return 'spring';
+  if(m>=6&&m<=8)  return 'summer';
+  if(m>=9&&m<=11) return 'autumn';
+  return 'winter';
+}
+
+/* ── 계절별 히어로 배경색 (CSS 변수 적용) ── */
+const SEASON_HERO = {
+  spring: { bg:'#1A4535', accent:'#7BC67E', label:'🌸 봄' },
+  summer: { bg:'#0F3D2E', accent:'#40C073', label:'🌿 여름' },
+  autumn: { bg:'#3D2010', accent:'#E2A23B', label:'🍂 가을' },
+  winter: { bg:'#152535', accent:'#88C0D0', label:'❄️ 겨울' },
+};
+
+/* ── 요일별 글귀 무드 ── */
+const DAY_MOOD = {
+  0: { label:'일요일', prefix:'🌿 오늘은 쉬어가세요 —' },
+  1: { label:'월요일', prefix:'💪 한 주를 여는 월요일 —' },
+  2: { label:'화요일', prefix:'🔥 달리는 화요일 —' },
+  3: { label:'수요일', prefix:'⚡ 주중 고개, 수요일 —' },
+  4: { label:'목요일', prefix:'🎯 마무리가 보이는 목요일 —' },
+  5: { label:'금요일', prefix:'🎉 즐거운 금요일 —' },
+  6: { label:'토요일', prefix:'🌟 여유로운 토요일 —' },
+};
+
+/* ── 날짜 기반 글귀 선택 ── */
+function getTodaySaying(){
+  const now = new Date();
+  const start = new Date(now.getFullYear(), 0, 0);
+  const dayOfYear = Math.floor((now - start) / 86400000);
+  return SAYINGS[dayOfYear % SAYINGS.length];
+}
+
+/* ── 특별한 날 확인 ── */
+function getSpecialDay(m, d){
+  return SPECIAL_DAYS.find(s => s.month===m && s.day===d) || null;
+}
+
+/* ── 시간대별 창문 점등 비율 ── */
+function getLitRatio(slot){
+  return { dawn:0.35, morning:0.55, noon:0.45, afternoon:0.65, evening:0.85, night:0.25 }[slot];
+}
+
+/* ── 계절별 창문 색상 팔레트 ── */
+const SEASON_WIN_COLORS = {
+  spring: { lit:['#FDE68A','#D4F5B8','#FBE68A','#C8F0C0'], unlit:['#1A4535','#153A2A','#1F4A38'] },
+  summer: { lit:['#A7F3D0','#6EE7B7','#FDE68A','#BAF7D0'], unlit:['#0D3D2A','#0A3020','#103525'] },
+  autumn: { lit:['#FDE68A','#FBBF24','#FCA35D','#F97316'], unlit:['#3D1F0A','#2D1505','#3A1A08'] },
+  winter: { lit:['#BAE6FD','#93C5FD','#E0F2FE','#FDE68A'], unlit:['#0F2535','#0A1E30','#132030'] },
+};
+
+/* ── 히어로 배경 동적 변경 ── */
+function applyDynamicTheme(){
+  const now = new Date();
+  const m = now.getMonth()+1, d = now.getDate(), h = now.getHours(), dow = now.getDay();
+  const season = getSeason(m);
+  const slot = getTimeSlot(h);
+  const special = getSpecialDay(m, d);
+  const mood = DAY_MOOD[dow];
+  const sh = SEASON_HERO[season];
+
+  // 히어로 배경
+  const hero = document.querySelector('.hero');
+  if(hero) hero.style.background = sh.bg;
+
+  // 특별한 날 배너
+  if(special){
+    const eyebrow = document.querySelector('.hero-eyebrow');
+    if(eyebrow) eyebrow.textContent = `${special.emoji} ${special.label} — LEAD SMART SQUARE`;
+    const desc = document.querySelector('.hero-desc');
+    if(desc) desc.textContent = special.msg;
+  } else {
+    const eyebrow = document.querySelector('.hero-eyebrow');
+    if(eyebrow) eyebrow.textContent = `LEAD SMART SQUARE · 리드스마트스퀘어`;
+  }
+
+  // 오늘의 마루 한 마디 — 요일 무드 prefix 추가
+  const s = getTodaySaying();
+  const saying = document.getElementById('fs-saying');
+  const hanja  = document.getElementById('fs-hanja');
+  const meaning= document.getElementById('fs-meaning');
+  const fsdate = document.getElementById('fs-date');
+  const fslabel= document.getElementById('fs-label');
+
+  if(saying)  saying.textContent  = s.saying;
+  if(hanja)   hanja.textContent   = s.hanja || '';
+  if(meaning) meaning.textContent = s.meaning;
+  if(fsdate)  fsdate.textContent  =
+    now.toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric',weekday:'long'});
+  if(fslabel) fslabel.textContent = mood.prefix;
+
+  // 시간대 인사 (frame-label 업데이트)
+  const fl = document.querySelector('.frame-label');
+  if(fl){
+    fl.innerHTML = `<span style="flex:none;">${TIME_LABELS[slot]}</span>`;
+  }
+
+  return { season, slot };
+}
+
+/* ══ 창문 불빛 애니메이션 (계절·시간대 반응) ══ */
+function initCanvas(){
+  const canvas = document.getElementById('win-canvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  const now2 = new Date();
+  const season = getSeason(now2.getMonth()+1);
+  const slot   = getTimeSlot(now2.getHours());
+  const litRatio = getLitRatio(slot);
+  const palette  = SEASON_WIN_COLORS[season];
+
+  function resize(){
+    canvas.width  = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const COLS = 18, ROWS = 10, GAP = 4;
+  const wins = [];
+
+  function makeWindows(){
+    wins.length = 0;
+    const cw = canvas.width, ch = canvas.height;
+    const cW = (cw - GAP*(COLS+1))/COLS;
+    const cH = (ch - GAP*(ROWS+1))/ROWS;
+    for(let r=0; r<ROWS; r++){
+      for(let c=0; c<COLS; c++){
+        // 새벽·밤엔 위층(낮은 r)부터 켜지는 연출
+        let litChance = litRatio;
+        if(slot==='dawn')  litChance = litRatio * (1 - r/ROWS * 0.6);
+        if(slot==='night') litChance = litRatio * (r/ROWS * 0.5 + 0.2);
+        const lit = Math.random() < litChance;
+        wins.push({
+          x: GAP + c*(cW+GAP),
+          y: GAP + r*(cH+GAP),
+          w: cW, h: cH,
+          lit,
+          opacity: lit ? 0.55+Math.random()*0.4 : 0.04+Math.random()*0.06,
+          flicker: Math.random()*0.0025,
+          flickerDir: Math.random()>0.5?1:-1,
+          nextChange: Date.now() + 5000 + Math.random()*12000
+        });
+      }
+    }
+  }
+
+  makeWindows();
+  window.addEventListener('resize', makeWindows);
+
+  function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    const ts = Date.now();
+    wins.forEach(w=>{
+      // 자연스러운 점등 변화 (새벽엔 천천히, 퇴근 후엔 빠르게 꺼짐)
+      const changeProb = slot==='evening' ? 0.12 : slot==='dawn' ? 0.06 : 0.15;
+      if(ts > w.nextChange){
+        if(Math.random() < changeProb) w.lit = !w.lit;
+        w.nextChange = ts + 5000 + Math.random()*12000;
+      }
+      w.opacity += w.flicker * w.flickerDir;
+      if(w.opacity > 0.94 || w.opacity < 0.03) w.flickerDir *= -1;
+
+      ctx.globalAlpha = w.opacity;
+      ctx.fillStyle = w.lit ? pick(palette.lit) : pick(palette.unlit);
+      ctx.beginPath();
+      ctx.roundRect(w.x, w.y, w.w, w.h, 2);
+      ctx.fill();
+
+      if(w.lit && w.opacity > 0.45){
+        const grd = ctx.createRadialGradient(w.x+w.w/2,w.y+w.h/2,0,w.x+w.w/2,w.y+w.h/2,w.w*0.9);
+        grd.addColorStop(0,'rgba(255,248,200,0.32)');
+        grd.addColorStop(1,'rgba(255,248,200,0)');
+        ctx.globalAlpha = w.opacity * 0.55;
+        ctx.fillStyle = grd;
+        ctx.beginPath();
+        ctx.roundRect(w.x, w.y, w.w, w.h, 2);
+        ctx.fill();
+      }
+    });
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+/* ══ 페이지 전환 ══ */
+const PAGES = ['home','trade','biz','board','register','admin'];
+function go(id){
+  PAGES.forEach(p=>{
+    document.getElementById('p-'+p).classList.toggle('on', p===id);
+    const n = document.getElementById('n-'+p);
+    if(n) n.classList.toggle('on', p===id);
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+  document.getElementById('gnb').classList.remove('open');
+}
+
+/* ══ 햄버거 ══ */
+document.getElementById('hbg').addEventListener('click',()=>{
+  document.getElementById('gnb').classList.toggle('open');
+});
+
+/* ══ 탭 ══ */
+function setTab(el){
+  el.closest('.tabs').querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+}
+
+/* ══ 필터 ══ */
+function filt(el){
+  el.closest('.filters').querySelectorAll('.fbtn').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+  toast(el.textContent+' 필터 적용');
+}
+
+/* ══ 업체 모달 ══ */
+function openModal(name,type,floor,desc,icon,...tags){
+  document.getElementById('m-nm').textContent = name;
+  document.getElementById('m-fl').textContent = floor+' · '+type;
+  document.getElementById('m-desc').textContent = desc;
+  document.getElementById('m-ico').textContent = icon;
+  document.getElementById('m-ph').textContent = icon;
+  document.getElementById('m-tags').innerHTML = tags.map(t=>`<span class="btag">${t}</span>`).join('');
+  document.getElementById('biz-overlay').classList.add('open');
+}
+function closeModal(e){
+  if(e.target===document.getElementById('biz-overlay'))
+    document.getElementById('biz-overlay').classList.remove('open');
+}
+
+/* ══ 관리자 활성화 ══ */
+function doActivate(btn,name){
+  btn.outerHTML = '<button class="btn-acted">✅ 완료</button>';
+  toast(name+' 활성화 완료!');
+}
+
+/* ══ 토스트 ══ */
+function toast(msg){
+  const t = document.getElementById('toast-el');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+/* ══ INIT ══ */
+applyDynamicTheme();
+initCanvas();
+</script>
+</body>
+</html>
