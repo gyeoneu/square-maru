@@ -217,6 +217,62 @@ button{font-family:inherit;cursor:pointer;border:none;}
 .btn-chat{background:var(--green);color:#fff;font-size:13px;font-weight:700;padding:8px 16px;border-radius:18px;}
 .modal-close{position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:50%;background:rgba(0,0,0,0.3);color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10;}
 
+/* ══ 마루방 (미니홈피) ══ */
+.modal[data-theme="maru"]  { --room:#2D6A4F; --room-soft:#E6F0EB; --room-deep:#1B4535; }
+.modal[data-theme="noeul"] { --room:#C05A2E; --room-soft:#FBEADF; --room-deep:#8A3A1A; }
+.modal[data-theme="haneul"]{ --room:#3D6E8A; --room-soft:#E7F0F5; --room-deep:#274D63; }
+.modal[data-theme="hanji"] { --room:#8A7A4A; --room-soft:#F5F0DF; --room-deep:#5F5330; }
+.modal[data-theme="bam"]   { --room:#3A3F6E; --room-soft:#E9EAF6; --room-deep:#23264A; }
+.modal .modal-ph{background:linear-gradient(135deg,var(--room-soft) 0%,#fff 100%);border-bottom:3px solid var(--room);position:relative;}
+.modal .btn-chat{background:var(--room);}
+.room-counter{
+  position:absolute;top:12px;left:14px;background:rgba(255,255,255,0.85);border:1px solid var(--line);
+  border-radius:6px;padding:3px 10px;font-size:11px;font-weight:700;color:var(--ink-soft);letter-spacing:0.03em;
+  font-family:'Courier New',monospace;
+}
+.room-counter b{color:var(--room);}
+.room-motto{
+  background:var(--room-soft);border-left:3px solid var(--room);border-radius:0 8px 8px 0;
+  padding:9px 12px;font-size:13px;color:var(--ink);margin-bottom:14px;display:flex;justify-content:space-between;gap:8px;align-items:flex-start;
+}
+.room-motto .m-edit{background:none;border:none;font-size:12px;color:var(--ink-mute);cursor:pointer;flex-shrink:0;padding:0;}
+.room-warmth{margin-bottom:14px;}
+.room-warmth .w-top{display:flex;justify-content:space-between;font-size:12px;color:var(--ink-soft);margin-bottom:5px;}
+.room-warmth .w-top b{color:var(--room);font-size:14px;}
+.room-warmth .w-bar{height:8px;background:var(--surface2);border-radius:8px;overflow:hidden;}
+.room-warmth .w-fill{height:100%;background:linear-gradient(90deg,var(--room-soft),var(--room));border-radius:8px;transition:width .5s ease;}
+.room-actions{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
+.room-actions button{flex:1;min-width:100px;font-size:13px;font-weight:700;padding:9px 10px;border-radius:18px;border:1.5px solid var(--room);background:#fff;color:var(--room);}
+.room-actions button.on{background:var(--room);color:#fff;}
+.room-actions button.jeong{border-color:var(--amber);color:var(--amber);}
+.room-actions button.jeong:active{transform:scale(0.95);}
+.gb-box{border-top:1px dashed var(--line);padding-top:14px;margin-top:4px;}
+.gb-box h4{font-size:13px;font-weight:700;color:var(--ink-soft);margin-bottom:10px;}
+.gb-list{display:flex;flex-direction:column;gap:7px;margin-bottom:10px;max-height:180px;overflow-y:auto;}
+.gb-item{background:var(--surface2);border-radius:10px;padding:8px 12px;font-size:13px;position:relative;}
+.gb-item .gb-meta{font-size:11px;color:var(--ink-mute);margin-top:3px;display:flex;justify-content:space-between;}
+.gb-item .gb-del{background:none;border:none;font-size:11px;color:var(--ink-mute);text-decoration:underline;cursor:pointer;padding:0;}
+.gb-input{display:flex;gap:6px;}
+.gb-input input{flex:1;border:1px solid var(--line);border-radius:18px;padding:8px 14px;font-size:13px;font-family:inherit;background:#fff;}
+.gb-input button{background:var(--room);color:#fff;font-size:13px;font-weight:700;padding:8px 16px;border-radius:18px;}
+.theme-pick{display:flex;gap:6px;align-items:center;margin-bottom:14px;flex-wrap:wrap;}
+.theme-pick .tp-label{font-size:11px;color:var(--ink-mute);margin-right:2px;}
+.theme-dot{width:22px;height:22px;border-radius:50%;border:2px solid transparent;cursor:pointer;padding:0;}
+.theme-dot.on{border-color:var(--ink);transform:scale(1.1);}
+.td-maru{background:#2D6A4F;} .td-noeul{background:#C05A2E;} .td-haneul{background:#3D6E8A;} .td-hanji{background:#8A7A4A;} .td-bam{background:#3A3F6E;}
+.walk-btn{
+  width:100%;margin-top:14px;background:linear-gradient(90deg,var(--room),var(--room-deep));color:#fff;
+  font-size:14px;font-weight:700;padding:12px;border-radius:var(--radius-sm);
+}
+.walk-btn small{display:block;font-weight:400;font-size:11px;opacity:0.8;margin-top:2px;}
+.home-walk{
+  background:linear-gradient(135deg,var(--green-deep),var(--green));color:#fff;border-radius:var(--radius);
+  padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
+}
+.home-walk h3{font-size:16px;font-weight:900;margin-bottom:3px;}
+.home-walk p{font-size:12.5px;opacity:0.85;}
+.home-walk button{background:#fff;color:var(--green-deep);font-size:13px;font-weight:700;padding:10px 20px;border-radius:20px;flex-shrink:0;}
+
 /* ══ 게시판 ══ */
 .posts{display:flex;flex-direction:column;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;}
 .post-row{background:var(--surface);padding:12px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:background .15s;}
@@ -388,6 +444,17 @@ footer strong{color:rgba(255,255,255,0.85);}
       </div>
     </div>
 
+    <!-- 마루 산책 -->
+    <div class="sec">
+      <div class="home-walk">
+        <div>
+          <h3>🌊 마루 산책</h3>
+          <p>싸이월드 파도타기 감성 그대로 — 발길 닿는 대로 이웃 업체 마루방을 구경해보세요. 방마다 온기와 한마디가 쌓여요.</p>
+        </div>
+        <button onclick="maruWalk()">산책 시작하기</button>
+      </div>
+    </div>
+
     <!-- 최신 거래나눔 -->
     <div class="sec">
       <div class="sec-head"><h2>최신 거래·나눔 🛍️</h2><a href="#" onclick="go('trade')">더 보기</a></div>
@@ -521,16 +588,16 @@ footer strong{color:rgba(255,255,255,0.85);}
     <div class="form-box">
       <h3>업체 정보</h3>
       <p class="desc">등록 신청 내용은 관리사무소 확인 후 활성화돼요. 내용에 대한 책임은 직접 공개 버튼을 누르는 순간 업체에 있어요.</p>
-      <div class="frow"><label>업체명 *</label><input type="text" placeholder="등록된 업체명"></div>
+      <div class="frow"><label>업체명 *</label><input id="reg-name" type="text" placeholder="등록된 업체명"></div>
       <div class="f2">
-        <div class="frow"><label>동</label><select><option>A동</option><option>B동</option><option>C동</option></select></div>
-        <div class="frow"><label>호수 *</label><input type="text" placeholder="예) 703호"></div>
+        <div class="frow"><label>동</label><select id="reg-building"><option>A동</option><option>B동</option><option>C동</option></select></div>
+        <div class="frow"><label>호수 *</label><input id="reg-unit" type="text" placeholder="예) 703호"></div>
       </div>
-      <div class="frow"><label>업종 *</label><select><option>선택</option><option>IT·개발</option><option>디자인·인쇄</option><option>수리·설치</option><option>노무·법무</option><option>세무·회계</option><option>물류·배송</option><option>제조·생산</option><option>기타</option></select></div>
-      <div class="frow"><label>담당자 이메일 *</label><input type="email" placeholder="신청 근거용으로 보관돼요"></div>
-      <div class="frow"><label>연락처</label><input type="text" placeholder="이웃들이 연락할 번호"></div>
-      <div class="frow"><label>한 줄 소개</label><textarea placeholder="어떤 일을 하는 업체인지 짧게 (50자 권장)"></textarea></div>
-      <button class="btn-sub" onclick="toast('신청 접수! 관리사무소 확인 후 활성화돼요.');setTimeout(()=>go('home'),1500);">신청하기</button>
+      <div class="frow"><label>업종 *</label><select id="reg-category"><option>선택</option><option>IT·개발</option><option>디자인·인쇄</option><option>수리·설치</option><option>노무·법무</option><option>세무·회계</option><option>물류·배송</option><option>제조·생산</option><option>기타</option></select></div>
+      <div class="frow"><label>담당자 이메일 *</label><input id="reg-email" type="email" placeholder="신청 근거용으로 보관돼요"></div>
+      <div class="frow"><label>연락처</label><input id="reg-phone" type="text" placeholder="이웃들이 연락할 번호"></div>
+      <div class="frow"><label>한 줄 소개</label><textarea id="reg-desc" placeholder="어떤 일을 하는 업체인지 짧게 (50자 권장)"></textarea></div>
+      <button id="reg-btn" class="btn-sub" onclick="submitRegister()">신청하기</button>
     </div>
   </div>
 </div>
@@ -541,14 +608,12 @@ footer strong{color:rgba(255,255,255,0.85);}
     <h2 style="font-size:20px;font-weight:900;margin-bottom:6px;">관리자 — 스퀘어 마루</h2>
     <p style="font-size:13px;color:var(--ink-soft);margin-bottom:22px;">신청 목록을 확인하고 활성화 버튼을 눌러주세요. 이메일 없이 버튼 하나로 완료돼요.</p>
     <div class="admin-box">
-      <h3>🔔 신규 등록 신청 <span style="background:#FEF3CD;color:#8A5C0A;font-size:11px;padding:2px 8px;border-radius:10px;margin-left:6px;">3건 대기</span></h3>
+      <h3>🔔 신규 등록 신청</h3>
       <div style="overflow-x:auto;">
         <table class="atbl">
           <thead><tr><th>업체명</th><th>동·호수</th><th>업종</th><th>이메일</th><th>신청일</th><th></th></tr></thead>
-          <tbody>
-            <tr><td><strong>미래IT솔루션</strong></td><td>A동 215호</td><td>IT·개발</td><td>info@miraeit.co.kr</td><td>2026.07.01</td><td><button class="btn-act" onclick="doActivate(this,'미래IT솔루션')">활성화</button></td></tr>
-            <tr><td><strong>한빛세무회계</strong></td><td>C동 308호</td><td>세무·회계</td><td>hanbit@tax.kr</td><td>2026.06.30</td><td><button class="btn-act" onclick="doActivate(this,'한빛세무회계')">활성화</button></td></tr>
-            <tr><td><strong>그린푸드</strong></td><td>B동 102호</td><td>식품·음료</td><td>green@food.co.kr</td><td>2026.06.29</td><td><button class="btn-act" onclick="doActivate(this,'그린푸드')">활성화</button></td></tr>
+          <tbody id="pending-tbody">
+            <tr><td colspan="6" style="text-align:center;color:var(--ink-mute);padding:14px;">불러오는 중...</td></tr>
           </tbody>
         </table>
       </div>
@@ -569,20 +634,59 @@ footer strong{color:rgba(255,255,255,0.85);}
   </div>
 </div>
 
-<!-- 업체 모달 -->
+<!-- 업체 모달 = 마루방 (미니홈피) -->
 <div class="overlay" id="biz-overlay" onclick="closeModal(event)">
-  <div class="modal">
+  <div class="modal" id="room-modal" data-theme="maru">
     <div class="modal-close" onclick="document.getElementById('biz-overlay').classList.remove('open')">✕</div>
-    <div class="modal-ph" id="m-ph">🏢</div>
+    <div class="modal-ph" id="m-ph">🏢
+      <div class="room-counter">TODAY <b id="m-today">0</b> · TOTAL <b id="m-total">0</b></div>
+    </div>
     <div class="modal-body">
       <div class="modal-hd">
         <div class="modal-ico" id="m-ico">🏢</div>
         <div><div class="modal-nm" id="m-nm">업체명</div><div class="modal-fl" id="m-fl">위치</div></div>
       </div>
+
+      <div class="room-motto">
+        <span id="m-motto">"오늘도 좋은 하루!"</span>
+        <button class="m-edit" onclick="editMotto()" title="내 방일 때 수정할 수 있어요">✏️</button>
+      </div>
+
+      <div class="room-warmth">
+        <div class="w-top"><span>🔥 마루 온기 <span style="font-size:11px;color:var(--ink-mute);">— 이웃·한마디·정이 모이면 올라가요</span></span><b id="m-warmth">36.5℃</b></div>
+        <div class="w-bar"><div class="w-fill" id="m-warmth-fill" style="width:20%;"></div></div>
+      </div>
+
+      <div class="room-actions">
+        <button id="m-neigh" onclick="toggleNeighbor()">🤝 이웃 맺기</button>
+        <button class="jeong" onclick="sendJeong()">🧡 정 보내기 <span id="m-jeong">0</span></button>
+      </div>
+
+      <div class="theme-pick">
+        <span class="tp-label">방 테마</span>
+        <button class="theme-dot td-maru" data-th="maru" onclick="setTheme('maru')" title="마루"></button>
+        <button class="theme-dot td-noeul" data-th="noeul" onclick="setTheme('noeul')" title="노을"></button>
+        <button class="theme-dot td-haneul" data-th="haneul" onclick="setTheme('haneul')" title="하늘"></button>
+        <button class="theme-dot td-hanji" data-th="hanji" onclick="setTheme('hanji')" title="한지"></button>
+        <button class="theme-dot td-bam" data-th="bam" onclick="setTheme('bam')" title="밤"></button>
+        <span class="tp-label" style="margin-left:4px;">(내 방일 때만 · 데모라 자유롭게)</span>
+      </div>
+
       <div class="modal-desc" id="m-desc"></div>
       <div class="modal-chat"><span style="font-size:13px;color:var(--ink-soft);">채팅으로 바로 문의하세요</span><button class="btn-chat" onclick="toast('채팅 기능 오픈 예정!')">💬 채팅하기</button></div>
-      <div><h4 style="font-size:13px;font-weight:700;color:var(--ink-soft);margin-bottom:8px;">거래·나눔</h4><p style="font-size:13px;color:var(--ink-mute);">아직 올린 거래·나눔 글이 없어요.</p></div>
-      <div class="biz-tags" id="m-tags" style="margin-top:12px;"></div>
+
+      <div class="gb-box">
+        <h4>💬 이웃 한마디 <span id="m-gb-count" style="font-weight:400;color:var(--ink-mute);"></span></h4>
+        <div class="gb-list" id="m-gb-list"></div>
+        <div class="gb-input">
+          <input type="text" id="m-gb-input" maxlength="80" placeholder="따뜻한 한마디를 남겨보세요 (80자)">
+          <button onclick="addGuestbook()">남기기</button>
+        </div>
+      </div>
+
+      <div class="biz-tags" id="m-tags" style="margin-top:14px;"></div>
+
+      <button class="walk-btn" onclick="maruWalk()">🌊 마루 산책 — 다음 이웃 구경 가기<small>싸이월드 파도타기처럼, 우연히 만나는 이웃이 인연이 돼요</small></button>
     </div>
   </div>
 </div>
@@ -912,16 +1016,324 @@ function filt(el){
   toast(el.textContent+' 필터 적용');
 }
 
-/* ══ 업체 모달 ══ */
+/* ══ 마루방 (미니홈피) 시스템 ══ */
+/* 업체 기본 데이터 — 실제 서비스에서는 서버에서 옵니다. seed*는 데모가 살아 보이게 하는 초기값. */
+const BIZ_DATA = [
+  { name:'삼성시스템에어컨', type:'수리·설치', floor:'B동 703호', desc:'에어컨 설치·수리 전문 25년 경력. 리드스마트스퀘어 입주 업체 특별 할인 제공.', icon:'🌬️', tags:['설치','출장','할인'], theme:'haneul', motto:'폭염 예보 떴어요. 냉방 점검은 미리미리!', seedVisits:184, seedJeong:12,
+    seedGb:[ {who:'A동 512호 다온그래픽', text:'저희 사무실 에어컨 살려주셔서 감사해요 🙏', when:'2일 전'}, {who:'C동 601호', text:'출장 빠르고 친절하세요. 강추!', when:'1주 전'} ] },
+  { name:'다온그래픽', type:'디자인·인쇄', floor:'A동 512호', desc:'로고·명함·배너·간판 디자인. 당일 출력 가능.', icon:'🎨', tags:['디자인','인쇄','CI'], theme:'noeul', motto:'이번 주 배너 출력 20% 할인 중이에요 🎨', seedVisits:231, seedJeong:18,
+    seedGb:[ {who:'B동 908호 스마트웹코딩', text:'명함 너무 예쁘게 나왔어요!', when:'3일 전'}, {who:'B동 703호 삼성시스템에어컨', text:'간판 시안 최고였습니다 👍', when:'5일 전'} ] },
+  { name:'한울노무사사무소', type:'노무·법무', floor:'C동 1102호', desc:'취업규칙·근로계약서·4대보험 상담. 첫 상담 무료.', icon:'⚖️', tags:['노무','법무','상담무료'], theme:'hanji', motto:'7월 최저임금 이슈, 무료 상담 받으세요.', seedVisits:97, seedJeong:7,
+    seedGb:[ {who:'A동 205호', text:'근로계약서 검토 감사했습니다. 든든해요.', when:'4일 전'} ] },
+  { name:'케이로지텍', type:'물류·배송', floor:'A동 B1-04호', desc:'소량 물류 보관·배송 대행. 월 단위 계약 가능.', icon:'📦', tags:['물류','배송','보관'], theme:'maru', motto:'창고 자리 조금 남았어요. 보관 문의 환영!', seedVisits:64, seedJeong:4,
+    seedGb:[] },
+  { name:'스마트웹코딩', type:'IT·개발', floor:'B동 908호', desc:'홈페이지·쇼핑몰 제작 및 유지보수. 소상공인 특화.', icon:'💻', tags:['IT','개발','홈페이지'], theme:'bam', motto:'우리 건물 업체는 유지보수 첫 달 무료!', seedVisits:142, seedJeong:9,
+    seedGb:[ {who:'C동 405호 리더스회계사무소', text:'홈페이지 리뉴얼 만족합니다 😊', when:'1일 전'} ] },
+  { name:'리더스회계사무소', type:'세무·회계', floor:'C동 405호', desc:'법인세·부가세·종합소득세 신고. 세무진단 무료.', icon:'📊', tags:['세무','회계','절세'], theme:'maru', motto:'부가세 신고 마감 임박! 서두르세요 📊', seedVisits:203, seedJeong:15,
+    seedGb:[ {who:'A동 512호 다온그래픽', text:'세무진단 덕에 놓칠 뻔한 공제 찾았어요!', when:'2일 전'} ] },
+];
+
+/* ══ Supabase 연결 설정 ══
+   아래 두 값을 Supabase > Settings > API 에서 복사해서 넣으세요 */
+const SUPABASE_URL  = 'YOUR_SUPABASE_URL';
+const SUPABASE_KEY  = 'YOUR_SUPABASE_ANON_KEY';
+
+async function sbFetch(path, options={}){
+  const res = await fetch(SUPABASE_URL + '/rest/v1/' + path, {
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': options.prefer || 'return=representation',
+      ...options.headers
+    },
+    ...options
+  });
+  if(!res.ok){ const err = await res.text(); throw new Error(err); }
+  const text = await res.text();
+  return text ? JSON.parse(text) : null;
+}
+
+/* 업체 등록 신청 → businesses 테이블에 저장 */
+async function submitRegister(){
+  const name     = document.getElementById('reg-name').value.trim();
+  const building = document.getElementById('reg-building').value;
+  const unit     = document.getElementById('reg-unit').value.trim();
+  const category = document.getElementById('reg-category').value;
+  const email    = document.getElementById('reg-email').value.trim();
+  const phone    = document.getElementById('reg-phone').value.trim();
+  const desc     = document.getElementById('reg-desc').value.trim();
+
+  if(!name || !unit || category==='선택' || !email){
+    toast('업체명, 호수, 업종, 이메일은 필수예요'); return;
+  }
+  const btn = document.getElementById('reg-btn');
+  btn.disabled = true; btn.textContent = '신청 중...';
+  try{
+    await sbFetch('businesses', {
+      method: 'POST',
+      body: JSON.stringify({
+        name, building, floor_unit: unit, category, email, phone,
+        description: desc, status: 'pending', is_public: false,
+        promo_start: null
+      })
+    });
+    toast('✅ 신청이 접수됐어요! 관리사무소 확인 후 활성화돼요.');
+    setTimeout(()=>go('home'), 1600);
+  }catch(e){
+    toast('오류가 발생했어요: ' + e.message);
+    btn.disabled = false; btn.textContent = '신청하기';
+  }
+}
+
+/* 방명록 불러오기 */
+async function loadGuestbookFromDB(bizName){
+  try{
+    const rows = await sbFetch(`guestbook?business_name=eq.${encodeURIComponent(bizName)}&order=created_at.asc`);
+    return (rows||[]).map(r=>({ who: r.who, text: r.text, when: new Date(r.created_at).toLocaleDateString('ko-KR') }));
+  }catch(e){ return []; }
+}
+
+/* 방명록 저장 */
+async function saveGuestbookToDB(bizName, who, text){
+  await sbFetch('guestbook', {
+    method: 'POST',
+    body: JSON.stringify({ business_name: bizName, who, text })
+  });
+}
+
+/* 정 카운트 불러오기 */
+async function loadJeongFromDB(bizName){
+  try{
+    const rows = await sbFetch(`jeong?business_name=eq.${encodeURIComponent(bizName)}`);
+    return rows && rows.length > 0 ? rows[0].count : 0;
+  }catch(e){ return 0; }
+}
+
+/* 정 증가 (upsert) */
+async function incrementJeongInDB(bizName){
+  const current = await loadJeongFromDB(bizName);
+  await sbFetch('jeong', {
+    method: 'POST',
+    prefer: 'resolution=merge-duplicates',
+    headers: { 'Prefer': 'resolution=merge-duplicates,return=representation' },
+    body: JSON.stringify({ business_name: bizName, count: current + 1 })
+  });
+  return current + 1;
+}
+
+/* 관리자 — 업체 활성화 */
+async function activateBusiness(bizName, btn){
+  try{
+    await sbFetch(`businesses?name=eq.${encodeURIComponent(bizName)}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status: 'active', promo_start: new Date().toISOString().split('T')[0] })
+    });
+    btn.outerHTML = '<button class="btn-acted">✅ 완료</button>';
+    toast(bizName + ' 활성화 완료!');
+    loadPendingList();
+  }catch(e){ toast('오류: ' + e.message); }
+}
+
+/* 관리자 — 대기 목록 불러오기 */
+async function loadPendingList(){
+  try{
+    const rows = await sbFetch('businesses?status=eq.pending&order=created_at.desc');
+    const tbody = document.getElementById('pending-tbody');
+    if(!tbody) return;
+    if(!rows || rows.length===0){
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--ink-mute);padding:14px;">대기 중인 신청이 없어요</td></tr>';
+      return;
+    }
+    tbody.innerHTML = rows.map(r=>`
+      <tr>
+        <td><strong>${escHtml(r.name)}</strong></td>
+        <td>${escHtml(r.building)} ${escHtml(r.floor_unit)}</td>
+        <td>${escHtml(r.category)}</td>
+        <td>${escHtml(r.email)}</td>
+        <td>${r.created_at ? r.created_at.split('T')[0] : ''}</td>
+        <td><button class="btn-act" onclick="activateBusiness('${escHtml(r.name)}', this)">활성화</button></td>
+      </tr>
+    `).join('');
+  }catch(e){ console.error(e); }
+}
+function escHtml(s){ const d=document.createElement('div'); d.textContent=s||''; return d.innerHTML; }
+
+/* 저장소 (localStorage — 방 테마·모토·이웃 맺기는 개인 설정이라 로컬 유지) */
+const SM_KEYS = { rooms:'sm_rooms', visits:'sm_visits', neighbors:'sm_neighbors' };
+function smLoad(k, def){ try{ const v = JSON.parse(localStorage.getItem(k)); return v===null||v===undefined ? def : v; }catch(e){ return def; } }
+function smSave(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+
+let currentBiz = null;
+
+function findBiz(name){ return BIZ_DATA.find(b=>b.name===name) || null; }
+function todayStr(){ const d=new Date(); return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(); }
+
+/* 방문자 수 — 모달을 열 때마다 TODAY/TOTAL 증가 (하루 지나면 TODAY 리셋) */
+function bumpVisit(name, seed){
+  const all = smLoad(SM_KEYS.visits, {});
+  const v = all[name] || { total: seed||0, date: todayStr(), today: 0 };
+  if(v.date !== todayStr()){ v.date = todayStr(); v.today = 0; }
+  v.today += 1; v.total += 1;
+  all[name] = v; smSave(SM_KEYS.visits, all);
+  return v;
+}
+
+/* 마루 온기 = 36.5 + 한마디×0.4 + 정×0.2 + 이웃이면 +1.0 (최대 99.9) */
+function calcWarmth(name){
+  const gb = getGuestbook(name).length;
+  const jeong = getJeong(name);
+  const isN = getNeighbors().includes(name);
+  const w = Math.min(99.9, 36.5 + gb*0.4 + jeong*0.2 + (isN?1.0:0));
+  return Math.round(w*10)/10;
+}
+function getJeong(name){
+  const biz = findBiz(name);
+  const all = smLoad(SM_KEYS.jeong, {});
+  return (all[name]!==undefined ? all[name] : (biz? biz.seedJeong:0));
+}
+function getNeighbors(){ return smLoad(SM_KEYS.neighbors, []); }
+function getGuestbook(name){
+  const biz = findBiz(name);
+  const all = smLoad(SM_KEYS.guest, {});
+  if(all[name]) return all[name];
+  return biz ? biz.seedGb.map(g=>({ ...g, seed:true })) : [];
+}
+function saveGuestbook(name, list){
+  const all = smLoad(SM_KEYS.guest, {});
+  all[name] = list; smSave(SM_KEYS.guest, all);
+}
+function getRoomPrefs(name){
+  const biz = findBiz(name);
+  const all = smLoad(SM_KEYS.rooms, {});
+  return all[name] || { theme: biz?biz.theme:'maru', motto: biz?biz.motto:'' };
+}
+function saveRoomPrefs(name, prefs){
+  const all = smLoad(SM_KEYS.rooms, {});
+  all[name] = prefs; smSave(SM_KEYS.rooms, all);
+}
+
+/* 모달 열기 — 기존 인라인 호출(openModal('업체명', ...))과 호환:
+   이름으로 BIZ_DATA를 먼저 찾고, 없으면 전달받은 인자로 그대로 표시 */
 function openModal(name,type,floor,desc,icon,...tags){
-  document.getElementById('m-nm').textContent = name;
-  document.getElementById('m-fl').textContent = floor+' · '+type;
-  document.getElementById('m-desc').textContent = desc;
-  document.getElementById('m-ico').textContent = icon;
-  document.getElementById('m-ph').textContent = icon;
-  document.getElementById('m-tags').innerHTML = tags.map(t=>`<span class="btag">${t}</span>`).join('');
+  const biz = findBiz(name) || { name, type, floor, desc, icon, tags, seedVisits:0, seedGb:[], seedJeong:0, motto:'', theme:'maru' };
+  currentBiz = biz.name;
+
+  document.getElementById('m-nm').textContent = biz.name;
+  document.getElementById('m-fl').textContent = biz.floor+' · '+biz.type;
+  document.getElementById('m-desc').textContent = biz.desc;
+  document.getElementById('m-ico').textContent = biz.icon;
+  document.getElementById('m-ph').childNodes[0].textContent = biz.icon;
+  document.getElementById('m-tags').innerHTML = (biz.tags||[]).map(t=>`<span class="btag">${t}</span>`).join('');
+
+  const v = bumpVisit(biz.name, biz.seedVisits);
+  document.getElementById('m-today').textContent = v.today;
+  document.getElementById('m-total').textContent = v.total;
+
+  renderRoom();
   document.getElementById('biz-overlay').classList.add('open');
 }
+
+async function renderRoom(){
+  const name = currentBiz;
+  const prefs = getRoomPrefs(name);
+
+  const modal = document.getElementById('room-modal');
+  modal.dataset.theme = prefs.theme;
+  modal.querySelectorAll('.theme-dot').forEach(d=>d.classList.toggle('on', d.dataset.th===prefs.theme));
+
+  document.getElementById('m-motto').textContent = prefs.motto ? '"'+prefs.motto+'"' : '"아직 오늘의 한 마디가 없어요."';
+
+  const w = calcWarmth(name);
+  document.getElementById('m-warmth').textContent = w.toFixed(1)+'℃';
+  document.getElementById('m-warmth-fill').style.width = Math.min(100, (w-30)/70*100)+'%';
+
+  const isN = getNeighbors().includes(name);
+  const nBtn = document.getElementById('m-neigh');
+  nBtn.textContent = isN ? '🤝 이웃이에요 ✓' : '🤝 이웃 맺기';
+  nBtn.classList.toggle('on', isN);
+
+  const jeong = await loadJeongFromDB(name);
+  document.getElementById('m-jeong').textContent = jeong;
+
+  const gb = await loadGuestbookFromDB(name);
+  const warmth2 = Math.min(99.9, 36.5 + gb.length*0.4 + jeong*0.2 + (getNeighbors().includes(name)?1.0:0));
+  document.getElementById('m-warmth').textContent = warmth2.toFixed(1)+'℃';
+  document.getElementById('m-warmth-fill').style.width = Math.min(100, (warmth2-30)/70*100)+'%';
+
+  document.getElementById('m-gb-count').textContent = gb.length ? gb.length+'개' : '';
+  document.getElementById('m-gb-list').innerHTML = gb.length===0
+    ? '<div style="font-size:12.5px;color:var(--ink-mute);text-align:center;padding:10px;">아직 한마디가 없어요. 첫 이웃이 되어주세요 🌱</div>'
+    : gb.map((g,i)=>`
+      <div class="gb-item">
+        ${escapeGb(g.text)}
+        <div class="gb-meta">
+          <span>${escapeGb(g.who)} · ${escapeGb(g.when)}</span>
+        </div>
+      </div>`).join('');
+}
+function escapeGb(s){ const d=document.createElement('div'); d.textContent=s||''; return d.innerHTML; }
+
+function toggleNeighbor(){
+  let n = getNeighbors();
+  if(n.includes(currentBiz)){ n = n.filter(x=>x!==currentBiz); toast('이웃을 해제했어요'); }
+  else { n.push(currentBiz); toast('🤝 '+currentBiz+'와 이웃이 됐어요!'); }
+  smSave(SM_KEYS.neighbors, n);
+  renderRoom();
+}
+
+async function sendJeong(){
+  try{
+    await incrementJeongInDB(currentBiz);
+    toast('🧡 정을 보냈어요! 온기가 올라가요');
+    await renderRoom();
+  }catch(e){ toast('오류: ' + e.message); }
+}
+
+function setTheme(th){
+  const prefs = getRoomPrefs(currentBiz);
+  prefs.theme = th;
+  saveRoomPrefs(currentBiz, prefs);
+  renderRoom();
+}
+
+function editMotto(){
+  const prefs = getRoomPrefs(currentBiz);
+  const v = prompt('오늘의 한 마디 (50자 이내)\n※ 실제 서비스에선 내 방일 때만 수정할 수 있어요.', prefs.motto || '');
+  if(v === null) return;
+  prefs.motto = v.trim().slice(0, 50);
+  saveRoomPrefs(currentBiz, prefs);
+  renderRoom();
+  toast('오늘의 한 마디를 바꿨어요');
+}
+
+async function addGuestbook(){
+  const input = document.getElementById('m-gb-input');
+  const text = input.value.trim();
+  if(!text){ toast('한마디를 적어주세요'); return; }
+  try{
+    await saveGuestbookToDB(currentBiz, '방문자', text);
+    input.value = '';
+    await renderRoom();
+    toast('💬 한마디를 남겼어요. 온기 +0.4℃!');
+  }catch(e){ toast('저장 오류: ' + e.message); }
+}
+function delGuestbook(i){
+  const list = getGuestbook(currentBiz);
+  if(!list[i] || !list[i].mine) return;
+  list.splice(i,1);
+  saveGuestbook(currentBiz, list);
+  renderRoom();
+}
+
+/* 마루 산책 (파도타기) — 지금 방을 뺀 나머지 중 무작위로 다음 방 */
+function maruWalk(){
+  const pool = BIZ_DATA.filter(b=>b.name!==currentBiz);
+  const next = pool[Math.floor(Math.random()*pool.length)];
+  openModal(next.name);
+  toast('🌊 파도를 타고 '+next.name+' 마루방에 왔어요');
+}
+
 function closeModal(e){
   if(e.target===document.getElementById('biz-overlay'))
     document.getElementById('biz-overlay').classList.remove('open');
@@ -942,6 +1354,15 @@ function toast(msg){
 }
 
 /* ══ INIT ══ */
+document.getElementById('m-gb-input').addEventListener('keydown', e=>{ if(e.key==='Enter') addGuestbook(); });
+
+/* 관리자 페이지 진입 시 자동 로드 */
+const _origGo = go;
+window.go = function(id){
+  _origGo(id);
+  if(id==='admin') loadPendingList();
+};
+
 applyDynamicTheme();
 initCanvas();
 </script>
