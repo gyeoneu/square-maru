@@ -647,6 +647,14 @@ footer strong{color:rgba(255,255,255,0.85);}
         </table>
       </div>
     </div>
+
+    <div class="admin-box" style="border-color:var(--line);">
+      <h3 style="color:var(--ink);">📋 게시판 관리</h3>
+      <p style="font-size:13px;color:var(--ink-soft);margin-bottom:14px;">공지를 위로 고정하거나 부적절한 글을 삭제할 수 있어요.</p>
+      <div class="posts" id="admin-board-list">
+        <div style="text-align:center;padding:16px;color:var(--ink-mute);font-size:13px;">불러오는 중...</div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -1226,7 +1234,8 @@ async function togglePin(postId, currentPin){
       body: JSON.stringify({ is_pinned: !currentPin })
     });
     toast(currentPin ? '고정을 해제했어요' : '📌 공지를 위로 고정했어요');
-    loadBoard('board-list', 50, true);
+    loadBoard('board-list', 50, false);
+    loadBoard('admin-board-list', 50, true);
     loadBoard('home-board-list', 4, false);
   }catch(e){ toast('오류: ' + e.message); }
 }
@@ -1237,6 +1246,7 @@ async function deletePost(postId){
     await sbFetch(`posts?id=eq.${postId}`, { method: 'DELETE', prefer:'' });
     toast('삭제했어요');
     loadBoard('board-list', 50, false);
+    loadBoard('admin-board-list', 50, true);
     loadBoard('home-board-list', 4, false);
   }catch(e){ toast('오류: ' + e.message); }
 }
@@ -1518,7 +1528,7 @@ document.getElementById('m-gb-input').addEventListener('keydown', e=>{ if(e.key=
 const _origGo = go;
 window.go = function(id){
   _origGo(id);
-  if(id==='admin'){ loadPendingList(); loadActiveList(); loadBoard('board-list', 50, true); }
+  if(id==='admin'){ loadPendingList(); loadActiveList(); loadBoard('admin-board-list', 50, true); }
   if(id==='board'){ loadBoard('board-list', 50, false); }
 };
 
