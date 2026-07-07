@@ -623,10 +623,8 @@ footer strong{color:rgba(255,255,255,0.85);}
       <div style="overflow-x:auto;">
         <table class="atbl">
           <thead><tr><th>업체명</th><th>동·호수</th><th>업종</th><th>등록일</th><th>상태</th></tr></thead>
-          <tbody>
-            <tr><td><strong>삼성시스템에어컨</strong></td><td>B동 703호</td><td>수리·설치</td><td>2026.06.19</td><td><span class="sdot act"></span>활성</td></tr>
-            <tr><td><strong>다온그래픽</strong></td><td>A동 512호</td><td>디자인·인쇄</td><td>2026.06.24</td><td><span class="sdot act"></span>활성</td></tr>
-            <tr><td><strong>한울노무사사무소</strong></td><td>C동 1102호</td><td>노무·법무</td><td>2026.06.28</td><td><span class="sdot act"></span>활성</td></tr>
+          <tbody id="active-tbody">
+            <tr><td colspan="5" style="text-align:center;color:var(--ink-mute);padding:14px;">불러오는 중...</td></tr>
           </tbody>
         </table>
       </div>
@@ -1132,7 +1130,30 @@ async function activateBusiness(bizName, btn){
     btn.outerHTML = '<button class="btn-acted">✅ 완료</button>';
     toast(bizName + ' 활성화 완료!');
     loadPendingList();
+    loadActiveList();
   }catch(e){ toast('오류: ' + e.message); }
+}
+
+/* 관리자 — 활성화된 업체 목록 불러오기 */
+async function loadActiveList(){
+  try{
+    const rows = await sbFetch('businesses?status=eq.active&order=promo_start.desc');
+    const tbody = document.getElementById('active-tbody');
+    if(!tbody) return;
+    if(!rows || rows.length===0){
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--ink-mute);padding:14px;">아직 활성화된 업체가 없어요</td></tr>';
+      return;
+    }
+    tbody.innerHTML = rows.map(r=>`
+      <tr>
+        <td><strong>${escHtml(r.name)}</strong></td>
+        <td>${escHtml(r.building)} ${escHtml(r.floor_unit)}</td>
+        <td>${escHtml(r.category)}</td>
+        <td>${r.promo_start || r.created_at?.split('T')[0] || '-'}</td>
+        <td><span class="sdot act"></span>활성</td>
+      </tr>
+    `).join('');
+  }catch(e){ console.error(e); }
 }
 
 /* 관리자 — 대기 목록 불러오기 */
@@ -1360,7 +1381,7 @@ document.getElementById('m-gb-input').addEventListener('keydown', e=>{ if(e.key=
 const _origGo = go;
 window.go = function(id){
   _origGo(id);
-  if(id==='admin') loadPendingList();
+  if(id==='admin'){ loadPendingList(); loadActiveList(); }
 };
 
 applyDynamicTheme();
