@@ -310,6 +310,10 @@ button{font-family:inherit;cursor:pointer;border:none;}
 .btn-act{background:var(--green);color:#fff;font-size:12px;font-weight:700;padding:5px 12px;border-radius:12px;transition:.15s;}
 .btn-act:hover{background:var(--green-deep);}
 .btn-acted{background:var(--surface2);color:var(--ink-mute);font-size:12px;padding:5px 12px;border-radius:12px;cursor:default;}
+.btn-deact{background:var(--amber);color:#fff;font-size:12px;font-weight:700;padding:5px 10px;border-radius:12px;transition:.15s;margin-right:4px;}
+.btn-deact:hover{opacity:.85;}
+.btn-del{background:var(--accent);color:#fff;font-size:12px;font-weight:700;padding:5px 10px;border-radius:12px;transition:.15s;}
+.btn-del:hover{opacity:.85;}
 .sdot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:4px;}
 .sdot.pend{background:var(--amber);}
 .sdot.act{background:var(--green);}
@@ -480,11 +484,8 @@ footer strong{color:rgba(255,255,255,0.85);}
     <!-- 마루 소식 -->
     <div class="sec">
       <div class="sec-head"><h2>마루 소식 📋</h2><a href="#" onclick="go('board')">더 보기</a></div>
-      <div class="posts">
-        <div class="post-row"><span style="margin-right:4px;">📌</span><span class="pcat notice">공지</span><span class="ptitle bold">7월 주차장 도색 공사 안내 (7/5~7/7)</span><span class="pmeta">관리사무소 · 1일 전</span></div>
-        <div class="post-row"><span class="pcat food">맛집</span><span class="ptitle">3층 구내식당 7월 특선 메뉴 나왔어요</span><span class="pmeta">A동 318호 · 2일 전</span></div>
-        <div class="post-row"><span class="pcat help">도움요청</span><span class="ptitle">A4 용지 한 묶음 빌릴 수 있는 분 계세요?</span><span class="pmeta">B동 712호 · 3시간 전</span></div>
-        <div class="post-row"><span class="pcat general">일반</span><span class="ptitle">건물 앞 새로 생긴 카페 후기 공유해요</span><span class="pmeta">C동 205호 · 5시간 전</span></div>
+      <div class="posts" id="home-board-list">
+        <div style="text-align:center;padding:16px;color:var(--ink-mute);font-size:13px;">불러오는 중...</div>
       </div>
     </div>
 
@@ -561,22 +562,39 @@ footer strong{color:rgba(255,255,255,0.85);}
   <div class="wrap sec">
     <h2 style="font-size:20px;font-weight:900;margin-bottom:18px;">마루 소식</h2>
     <div class="filters">
-      <button class="fbtn on">전체</button>
-      <button class="fbtn" onclick="filt(this)">공지</button>
-      <button class="fbtn" onclick="filt(this)">맛집</button>
-      <button class="fbtn" onclick="filt(this)">도움요청</button>
-      <button class="fbtn" onclick="filt(this)">일반</button>
+      <button class="fbtn on" onclick="filterBoard(this,'')">전체</button>
+      <button class="fbtn" onclick="filterBoard(this,'notice')">공지</button>
+      <button class="fbtn" onclick="filterBoard(this,'food')">맛집</button>
+      <button class="fbtn" onclick="filterBoard(this,'help')">도움요청</button>
+      <button class="fbtn" onclick="filterBoard(this,'general')">일반</button>
     </div>
-    <div class="posts">
-      <div class="post-row"><span style="margin-right:4px;">📌</span><span class="pcat notice">공지</span><span class="ptitle bold">7월 주차장 도색 공사 안내 (7/5~7/7 지하 1층)</span><span class="pmeta">관리사무소 · 1일 전</span></div>
-      <div class="post-row"><span style="margin-right:4px;">📌</span><span class="pcat notice">공지</span><span class="ptitle bold">6월 관리비 납부 안내</span><span class="pmeta">관리사무소 · 5일 전</span></div>
-      <div class="post-row"><span class="pcat food">맛집</span><span class="ptitle">3층 구내식당 7월 특선 메뉴 나왔어요</span><span class="pmeta">A동 318호 · 2일 전</span></div>
-      <div class="post-row"><span class="pcat help">도움요청</span><span class="ptitle">A4 용지 한 묶음 빌릴 수 있는 분 계세요?</span><span class="pmeta">B동 712호 · 3시간 전</span></div>
-      <div class="post-row"><span class="pcat general">일반</span><span class="ptitle">건물 앞 새로 생긴 카페 후기</span><span class="pmeta">C동 205호 · 5시간 전</span></div>
-      <div class="post-row"><span class="pcat help">도움요청</span><span class="ptitle">복합기 토너 어디서 빠르게 구매하셨어요?</span><span class="pmeta">A동 1104호 · 1일 전</span></div>
-      <div class="post-row"><span class="pcat general">일반</span><span class="ptitle">오늘 로비 화분 정말 예쁘게 바뀌었네요 👍</span><span class="pmeta">B동 601호 · 2일 전</span></div>
+    <div class="posts" id="board-list">
+      <div style="text-align:center;padding:20px;color:var(--ink-mute);font-size:13px;">불러오는 중...</div>
     </div>
-    <div style="text-align:center;margin-top:22px;"><button class="btn-sub" style="width:auto;padding:12px 32px;" onclick="toast('이웃 등록 후 글 올리기 가능!')">+ 소식 올리기</button></div>
+    <div style="text-align:center;margin-top:22px;">
+      <button class="btn-sub" style="width:auto;padding:12px 32px;" onclick="openPostForm()">+ 소식 올리기</button>
+    </div>
+  </div>
+</div>
+
+<!-- 소식 작성 폼 모달 -->
+<div class="overlay" id="post-overlay" onclick="closePostForm(event)">
+  <div style="background:var(--surface);border-radius:14px;width:100%;max-width:480px;padding:24px;position:relative;">
+    <div style="font-size:17px;font-weight:700;margin-bottom:16px;">소식 올리기</div>
+    <div class="frow"><label>카테고리</label>
+      <select id="post-cat">
+        <option value="general">일반</option>
+        <option value="notice">공지 (관리사무소)</option>
+        <option value="food">맛집</option>
+        <option value="help">도움요청</option>
+      </select>
+    </div>
+    <div class="frow"><label>제목 *</label><input id="post-title" type="text" placeholder="제목을 입력해주세요"></div>
+    <div class="frow"><label>작성자</label><input id="post-author" type="text" placeholder="예) A동 205호, 관리사무소"></div>
+    <div style="display:flex;gap:10px;margin-top:14px;">
+      <button class="btn-sub" style="flex:1;" onclick="submitPost()">올리기</button>
+      <button onclick="document.getElementById('post-overlay').classList.remove('open')" style="flex:1;background:var(--surface2);border-radius:22px;padding:12px;font-weight:700;color:var(--ink-soft);">취소</button>
+    </div>
   </div>
 </div>
 
@@ -622,7 +640,7 @@ footer strong{color:rgba(255,255,255,0.85);}
       <h3 style="color:var(--ink);">✅ 활성화된 업체</h3>
       <div style="overflow-x:auto;">
         <table class="atbl">
-          <thead><tr><th>업체명</th><th>동·호수</th><th>업종</th><th>등록일</th><th>상태</th></tr></thead>
+          <thead><tr><th>업체명</th><th>동·호수</th><th>업종</th><th>등록일</th><th>상태</th><th>관리</th></tr></thead>
           <tbody id="active-tbody">
             <tr><td colspan="5" style="text-align:center;color:var(--ink-mute);padding:14px;">불러오는 중...</td></tr>
           </tbody>
@@ -1134,6 +1152,122 @@ async function activateBusiness(bizName, btn){
   }catch(e){ toast('오류: ' + e.message); }
 }
 
+/* ══ 게시판 ══ */
+const CAT_LABEL = { notice:'공지', food:'맛집', help:'도움요청', general:'일반' };
+let boardFilter = '';
+
+function postRowHtml(p, showPin=false){
+  const isNotice = p.category==='notice';
+  const pin = p.is_pinned ? '<span style="margin-right:4px;">📌</span>' : '';
+  const adminBtns = showPin ? `
+    <span style="margin-left:auto;display:flex;gap:6px;flex-shrink:0;">
+      <button onclick="togglePin(${p.id},${p.is_pinned})" style="font-size:11px;background:${p.is_pinned?'var(--amber)':'var(--surface2)'};color:${p.is_pinned?'#fff':'var(--ink-soft)'};border:none;padding:3px 8px;border-radius:10px;cursor:pointer;">${p.is_pinned?'📌 고정됨':'위로 고정'}</button>
+      <button onclick="deletePost(${p.id})" style="font-size:11px;background:var(--accent);color:#fff;border:none;padding:3px 8px;border-radius:10px;cursor:pointer;">삭제</button>
+    </span>` : '';
+  return `<div class="post-row">
+    ${pin}<span class="pcat ${p.category}">${CAT_LABEL[p.category]||p.category}</span>
+    <span class="ptitle${isNotice?' bold':''}">${escHtml(p.title)}</span>
+    <span class="pmeta" style="white-space:nowrap;">${escHtml(p.author||'')} · ${p.created_at?new Date(p.created_at).toLocaleDateString('ko-KR'):''}</span>
+    ${adminBtns}
+  </div>`;
+}
+
+async function loadBoard(targetId='board-list', limit=50, showPin=false){
+  const wrap = document.getElementById(targetId);
+  if(!wrap) return;
+  try{
+    let url = 'posts?order=is_pinned.desc,created_at.desc';
+    if(boardFilter) url += `&category=eq.${boardFilter}`;
+    if(limit < 50) url += `&limit=${limit}`;
+    const rows = await sbFetch(url);
+    if(!rows || rows.length===0){
+      wrap.innerHTML = '<div style="text-align:center;padding:20px;color:var(--ink-mute);font-size:13px;">아직 올라온 소식이 없어요. 첫 소식을 올려보세요!</div>';
+      return;
+    }
+    wrap.innerHTML = rows.map(p=>postRowHtml(p, showPin)).join('');
+  }catch(e){
+    wrap.innerHTML = '<div style="text-align:center;padding:16px;color:var(--ink-mute);font-size:13px;">게시판을 불러오지 못했어요.</div>';
+  }
+}
+
+function filterBoard(btn, cat){
+  btn.closest('.filters').querySelectorAll('.fbtn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  boardFilter = cat;
+  loadBoard('board-list', 50, false);
+}
+
+function openPostForm(){ document.getElementById('post-overlay').classList.add('open'); }
+function closePostForm(e){ if(e.target===document.getElementById('post-overlay')) document.getElementById('post-overlay').classList.remove('open'); }
+
+async function submitPost(){
+  const title  = document.getElementById('post-title').value.trim();
+  const cat    = document.getElementById('post-cat').value;
+  const author = document.getElementById('post-author').value.trim() || '이웃';
+  if(!title){ toast('제목을 입력해주세요'); return; }
+  try{
+    await sbFetch('posts', {
+      method: 'POST',
+      body: JSON.stringify({ title, category: cat, author, is_pinned: false })
+    });
+    document.getElementById('post-title').value = '';
+    document.getElementById('post-author').value = '';
+    document.getElementById('post-overlay').classList.remove('open');
+    toast('소식을 올렸어요!');
+    loadBoard('board-list', 50, false);
+    loadBoard('home-board-list', 4, false);
+  }catch(e){ toast('오류: ' + e.message); }
+}
+
+async function togglePin(postId, currentPin){
+  try{
+    await sbFetch(`posts?id=eq.${postId}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ is_pinned: !currentPin })
+    });
+    toast(currentPin ? '고정을 해제했어요' : '📌 공지를 위로 고정했어요');
+    loadBoard('board-list', 50, true);
+    loadBoard('home-board-list', 4, false);
+  }catch(e){ toast('오류: ' + e.message); }
+}
+
+async function deletePost(postId){
+  if(!confirm('이 소식을 삭제할까요?')) return;
+  try{
+    await sbFetch(`posts?id=eq.${postId}`, { method: 'DELETE', prefer:'' });
+    toast('삭제했어요');
+    loadBoard('board-list', 50, false);
+    loadBoard('home-board-list', 4, false);
+  }catch(e){ toast('오류: ' + e.message); }
+}
+
+/* 관리자 — 비활성화 */
+async function deactivateBusiness(bizName){
+  if(!confirm(`"${bizName}" 업체를 비활성화할까요?\n데이터는 보존되며 언제든 다시 활성화할 수 있어요.`)) return;
+  try{
+    await sbFetch(`businesses?name=eq.${encodeURIComponent(bizName)}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status: 'inactive' })
+    });
+    toast(bizName + ' 비활성화 완료');
+    loadActiveList();
+  }catch(e){ toast('오류: ' + e.message); }
+}
+
+/* 관리자 — 완전 삭제 */
+async function deleteBusiness(bizName){
+  if(!confirm(`⚠️ "${bizName}" 업체를 완전히 삭제할까요?\n\n삭제하면 모든 데이터가 영구적으로 사라지며 복구가 불가능해요.\n정말 삭제하시겠어요?`)) return;
+  if(!confirm(`마지막 확인입니다.\n"${bizName}" 업체 데이터를 영구 삭제할게요.`)) return;
+  try{
+    await sbFetch(`businesses?name=eq.${encodeURIComponent(bizName)}`, {
+      method: 'DELETE',
+      prefer: ''
+    });
+    toast(bizName + ' 완전 삭제 완료');
+    loadActiveList();
+  }catch(e){ toast('오류: ' + e.message); }
+}
+
 /* 관리자 — 활성화된 업체 목록 불러오기 */
 async function loadActiveList(){
   try{
@@ -1151,6 +1285,10 @@ async function loadActiveList(){
         <td>${escHtml(r.category)}</td>
         <td>${r.promo_start || r.created_at?.split('T')[0] || '-'}</td>
         <td><span class="sdot act"></span>활성</td>
+        <td>
+          <button class="btn-deact" onclick="deactivateBusiness('${escHtml(r.name)}')">비활성화</button>
+          <button class="btn-del" onclick="deleteBusiness('${escHtml(r.name)}')">삭제</button>
+        </td>
       </tr>
     `).join('');
   }catch(e){ console.error(e); }
@@ -1377,13 +1515,15 @@ function toast(msg){
 /* ══ INIT ══ */
 document.getElementById('m-gb-input').addEventListener('keydown', e=>{ if(e.key==='Enter') addGuestbook(); });
 
-/* 관리자 페이지 진입 시 자동 로드 */
 const _origGo = go;
 window.go = function(id){
   _origGo(id);
-  if(id==='admin'){ loadPendingList(); loadActiveList(); }
+  if(id==='admin'){ loadPendingList(); loadActiveList(); loadBoard('board-list', 50, true); }
+  if(id==='board'){ loadBoard('board-list', 50, false); }
 };
 
+/* 초기 로드 */
+loadBoard('home-board-list', 4, false);
 applyDynamicTheme();
 initCanvas();
 </script>
