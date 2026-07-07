@@ -1093,7 +1093,7 @@ const BIZ_DATA = [
 
 /* ══ Supabase 연결 설정 ══
    아래 두 값을 Supabase > Settings > API 에서 복사해서 넣으세요 */
-const SUPABASE_URL  = 'https://jftcthqdcvdkzjlvdoox.supabase.co';
+const SUPABASE_URL  = 'Yhttps://jftcthqdcvdkzjlvdoox.supabase.co';
 const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpmdGN0aHFkY3Zka3pqbHZkb294Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMzNDc4MDYsImV4cCI6MjA5ODkyMzgwNn0.7A6OJxRI2y-rDOdeHzmQsgfeumGXO6YTfH70yfuhH34';
 
 async function sbFetch(path, options={}){
@@ -1196,6 +1196,7 @@ async function activateBusiness(bizName, btn){
     toast(bizName + ' 활성화 완료!');
     loadPendingList();
     loadActiveList();
+    loadActivePool();
   }catch(e){ toast('오류: ' + e.message); }
 }
 
@@ -1421,6 +1422,22 @@ function saveRoomPrefs(name, prefs){
   all[name] = prefs; smSave(SM_KEYS.rooms, all);
 }
 
+/* 모달 열기 — DB 데이터 객체로 직접 열기 */
+function openModalFromData(biz){
+  currentBiz = biz.name;
+  document.getElementById('m-nm').textContent = biz.name;
+  document.getElementById('m-fl').textContent = biz.floor + ' · ' + biz.type;
+  document.getElementById('m-desc').textContent = biz.desc;
+  document.getElementById('m-ico').textContent = biz.icon;
+  document.getElementById('m-ph').childNodes[0].textContent = biz.icon;
+  document.getElementById('m-tags').innerHTML = (biz.tags||[]).map(t=>`<span class="btag">${escHtml(t)}</span>`).join('');
+  const v = bumpVisit(biz.name, biz.seedVisits||0);
+  document.getElementById('m-today').textContent = v.today;
+  document.getElementById('m-total').textContent = v.total;
+  renderRoom();
+  document.getElementById('biz-overlay').classList.add('open');
+}
+
 /* 모달 열기 — 기존 인라인 호출(openModal('업체명', ...))과 호환:
    이름으로 BIZ_DATA를 먼저 찾고, 없으면 전달받은 인자로 그대로 표시 */
 function openModal(name,type,floor,desc,icon,...tags){
@@ -1535,11 +1552,34 @@ function delGuestbook(i){
 }
 
 /* 마루 산책 (파도타기) — 지금 방을 뺀 나머지 중 무작위로 다음 방 */
-function maruWalk(){
-  const pool = BIZ_DATA.filter(b=>b.name!==currentBiz);
+/* Supabase에서 활성화된 업체 캐시 */
+let _activePool = [];
+async function loadActivePool(){
+  try{
+    const rows = await sbFetch('businesses?status=eq.active&order=created_at.desc');
+    _activePool = (rows||[]).map(r=>({
+      name: r.name,
+      type: r.category,
+      floor: r.building + ' ' + r.floor_unit,
+      desc: r.description || '',
+      icon: r.icon || '🏢',
+      tags: [r.category],
+      seedVisits: 0,
+      seedGb: [],
+      seedJeong: 0,
+      motto: r.motto || '',
+      theme: r.theme || 'maru'
+    }));
+  }catch(e){ console.error('업체 로드 실패', e); }
+}
+
+async function maruWalk(){
+  if(_activePool.length === 0) await loadActivePool();
+  const pool = _activePool.filter(b=>b.name!==currentBiz);
+  if(pool.length === 0){ toast('아직 이웃 업체가 없어요. 조금 기다려주세요!'); return; }
   const next = pool[Math.floor(Math.random()*pool.length)];
-  openModal(next.name);
-  toast('🌊 파도를 타고 '+next.name+' 마루방에 왔어요');
+  openModalFromData(next);
+  toast('🌊 ' + next.name + ' 마루방에 왔어요');
 }
 
 function closeModal(e){
@@ -1573,6 +1613,7 @@ window.go = function(id){
 
 /* 초기 로드 */
 loadBoard('home-board-list', 4, false);
+loadActivePool();
 applyDynamicTheme();
 initCanvas();
 </script>
