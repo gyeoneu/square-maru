@@ -453,7 +453,7 @@ footer strong{color:rgba(255,255,255,0.85);}
       <div class="home-walk">
         <div>
           <h3>🌊 마루 산책</h3>
-          <p>싸이월드 파도타기 감성 그대로 — 발길 닿는 대로 이웃 업체 마루방을 구경해보세요. 방마다 온기와 한마디가 쌓여요.</p>
+          <p>발길 닿는 대로 이웃 업체 마루방을 구경해보세요. 방마다 온기와 한마디가 쌓여요.</p>
         </div>
         <button onclick="maruWalk()">산책 시작하기</button>
       </div>
@@ -615,6 +615,40 @@ footer strong{color:rgba(255,255,255,0.85);}
       <div class="frow"><label>담당자 이메일 *</label><input id="reg-email" type="email" placeholder="신청 근거용으로 보관돼요"></div>
       <div class="frow"><label>연락처</label><input id="reg-phone" type="text" placeholder="이웃들이 연락할 번호"></div>
       <div class="frow"><label>한 줄 소개</label><textarea id="reg-desc" placeholder="어떤 일을 하는 업체인지 짧게 (50자 권장)"></textarea></div>
+
+      <div style="border-top:1px dashed var(--line);margin:18px 0 14px;padding-top:14px;">
+        <div style="font-size:14px;font-weight:700;margin-bottom:4px;">🏠 마루방 꾸미기 (선택)</div>
+        <div style="font-size:12px;color:var(--ink-soft);margin-bottom:12px;">승인 후 마루방에 바로 반영돼요.</div>
+        <div class="frow"><label>업체 대표 이모지</label>
+          <select id="reg-icon">
+            <option value="🏢">🏢 기본</option>
+            <option value="💻">💻 IT·개발</option>
+            <option value="🎨">🎨 디자인</option>
+            <option value="🌬️">🌬️ 에어컨·수리</option>
+            <option value="⚖️">⚖️ 법무·노무</option>
+            <option value="📊">📊 세무·회계</option>
+            <option value="📦">📦 물류·배송</option>
+            <option value="✂️">✂️ 미용·뷰티</option>
+            <option value="🍽️">🍽️ 식품·음료</option>
+            <option value="🔧">🔧 제조·기술</option>
+            <option value="📚">📚 교육·강의</option>
+            <option value="💊">💊 의료·건강</option>
+          </select>
+        </div>
+        <div class="frow"><label>오늘의 한 마디</label>
+          <input id="reg-motto" type="text" maxlength="50" placeholder="예) 오늘도 최선을 다하겠습니다 (50자 이내)">
+        </div>
+        <div class="frow"><label>방 테마</label>
+          <select id="reg-theme">
+            <option value="maru">마루 (기본 초록)</option>
+            <option value="noeul">노을 (따뜻한 주황)</option>
+            <option value="haneul">하늘 (시원한 파랑)</option>
+            <option value="hanji">한지 (차분한 베이지)</option>
+            <option value="bam">밤 (고요한 다크)</option>
+          </select>
+        </div>
+      </div>
+
       <button id="reg-btn" class="btn-sub" onclick="submitRegister()">신청하기</button>
     </div>
   </div>
@@ -710,7 +744,7 @@ footer strong{color:rgba(255,255,255,0.85);}
 
       <div class="biz-tags" id="m-tags" style="margin-top:14px;"></div>
 
-      <button class="walk-btn" onclick="maruWalk()">🌊 마루 산책 — 다음 이웃 구경 가기<small>싸이월드 파도타기처럼, 우연히 만나는 이웃이 인연이 돼요</small></button>
+      <button class="walk-btn" onclick="maruWalk()">🌊 마루 산책 — 다음 이웃 구경 가기<small>우연히 만나는 이웃이 인연이 돼요</small></button>
     </div>
   </div>
 </div>
@@ -1088,6 +1122,10 @@ async function submitRegister(){
   const phone    = document.getElementById('reg-phone').value.trim();
   const desc     = document.getElementById('reg-desc').value.trim();
 
+  const icon    = document.getElementById('reg-icon').value;
+  const motto   = document.getElementById('reg-motto').value.trim();
+  const theme   = document.getElementById('reg-theme').value;
+
   if(!name || !unit || category==='선택' || !email){
     toast('업체명, 호수, 업종, 이메일은 필수예요'); return;
   }
@@ -1098,7 +1136,8 @@ async function submitRegister(){
       method: 'POST',
       body: JSON.stringify({
         name, building, floor_unit: unit, category, email, phone,
-        description: desc, status: 'pending', is_public: false,
+        description: desc, icon, motto, theme,
+        status: 'pending', is_public: false,
         promo_start: null
       })
     });
