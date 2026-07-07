@@ -1035,8 +1035,8 @@ const BIZ_DATA = [
 
 /* ══ Supabase 연결 설정 ══
    아래 두 값을 Supabase > Settings > API 에서 복사해서 넣으세요 */
-const SUPABASE_URL  = 'YOUR_SUPABASE_URL';
-const SUPABASE_KEY  = 'YOUR_SUPABASE_ANON_KEY';
+const SUPABASE_URL  = 'https://jftcthqdcvdkzjlvdoox.supabase.co/rest/v1/';
+const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpmdGN0aHFkY3Zka3pqbHZkb294Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODMzNDc4MDYsImV4cCI6MjA5ODkyMzgwNn0.7A6OJxRI2y-rDOdeHzmQsgfeumGXO6YTfH70yfuhH34';
 
 async function sbFetch(path, options={}){
   const res = await fetch(SUPABASE_URL + '/rest/v1/' + path, {
