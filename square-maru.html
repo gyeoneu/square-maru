@@ -896,14 +896,6 @@ const DAY_MOOD = {
   6: { label:'토요일', prefix:'🌟 여유로운 토요일 —' },
 };
 
-/* ── 날짜 기반 글귀 선택 ── */
-function getTodaySaying(){
-  const now = new Date();
-  const start = new Date(now.getFullYear(), 0, 0);
-  const dayOfYear = Math.floor((now - start) / 86400000);
-  return SAYINGS[dayOfYear % SAYINGS.length];
-}
-
 /* ── 특별한 날 확인 ── */
 function getSpecialDay(m, d){
   return SPECIAL_DAYS.find(s => s.month===m && s.day===d) || null;
